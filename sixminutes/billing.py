@@ -1,11 +1,15 @@
 """Stripe (test mode): one Customer per client, one invoice item per time entry with the evidence in metadata."""
 
+import logging
 import os
 import uuid
 
 import stripe
 
 from . import store
+
+for _name in ("stripe", "httpx"):
+    logging.getLogger(_name).setLevel(logging.WARNING)
 
 stripe.api_key = os.environ.get("STRIPE_SECRET_KEY", "")
 DRY_RUN = not stripe.api_key

@@ -501,7 +501,7 @@ function onResult(ev) {
     case 'recall_memory': cls = 'mem'; txt = (o.answers || []).length ? '↳ ' + esc(o.answers[0]).slice(0, 220) + ` <span class="pill acc">${o.backend}</span>` : 'nothing useful → stays held'; break;
     case 'propose_time_entry': txt = o.accepted ? `✓ ${esc(o.line)} · ${gbp(o.amount_gbp)}` + (o.flags?.length ? `<br><span style="color:var(--warn)">${o.flags.map(esc).join('<br>')}</span>` : '') : `✗ rejected by policy: ${esc(o.error)}`; if (!o.accepted && o.overage_hold) cls = 'hold'; break;
     case 'hold_for_review': cls = 'hold'; txt = o.accepted ? `held ${o.hours.toFixed(1)}h as ${o.hold_id} (${o.type})` : esc(o.error); break;
-    case 'mark_non_billable': cls = o.accepted ? '' : 'bad'; txt = o.accepted ? `${o.hours.toFixed(1)}h non-billable` : `✗ ${esc(o.error)}`; break;
+    case 'mark_non_billable': cls = o.accepted === true ? '' : 'bad'; txt = (o.accepted ? `${o.hours.toFixed(1)}h non-billable` : '') + (o.error ? `${o.accepted ? '<br>' : ''}✗ rejected by policy: ${esc(o.error)}` : ''); break;
     case 'propose_assignment': cls = o.accepted ? 'hold' : 'bad'; txt = o.accepted ? `proposal ${o.proposal_id}: ${o.evidence.hours}h over ${o.evidence.days} days → manager` : `✗ ${esc(o.error)}`; break;
     case 'create_invoice': txt = o.accepted ? `✓ ${o.invoice_id} · ${gbp(o.amount_gbp)} · ${o.lines} lines · finalised &amp; sent` : `✗ ${esc(o.error)}`; break;
     default: txt = esc(JSON.stringify(o)).slice(0, 200);
@@ -524,6 +524,7 @@ function runWeek(week) {
     else if (ev.type === 'tool_call') { const [ico, html] = describeCall(ev.name, ev.input); step(ev.name === 'recall_memory' ? 'mem' : '', ico, html, '', ev.id); }
     else if (ev.type === 'tool_result') { onResult(ev); refreshSoon(); }
     else if (ev.type === 'error') step('bad', '!', esc(ev.text));
+    else if (ev.type === 'check') step('hold', '✓', esc(ev.text));
     else if (ev.type === 'done') { es.close(); running = false; setButtons(); $('run-status').textContent = `${ev.week} done`; load(); }
   };
   es.onerror = () => { es.close(); running = false; setButtons(); $('run-status').textContent = 'disconnected'; load(); };

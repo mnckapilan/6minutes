@@ -8,13 +8,14 @@ from collections.abc import AsyncIterator
 from anthropic import AsyncAnthropic
 
 from . import policy, store
-from .tools import HANDLERS, SCHEMAS, WeekContext
+from .tools import HANDLERS, SCHEMAS, WeekContext, undisposed
 
 MODEL = os.environ.get("SIXMIN_MODEL", "claude-opus-5-5")
 EFFORT = os.environ.get("SIXMIN_EFFORT", "medium")
 # Server-side refusal fallback + progress-note betas only work against the Anthropic API directly.
 USE_BETAS = not os.environ.get("ANTHROPIC_BASE_URL") and os.environ.get("SIXMIN_BETAS", "1") == "1"
-MAX_TURNS = 40
+IS_CLAUDE = "claude" in MODEL
+MAX_TURNS = 60
 
 client = AsyncAnthropic()
 
@@ -67,16 +68,19 @@ async def run_week(week: str) -> AsyncIterator[dict]:
     store.audit("run.start", week=week, model=MODEL)
     yield {"type": "start", "week": week, "model": MODEL}
     messages = [{"role": "user", "content": f"Process week {week}: timesheets for every consultant, then invoices."}]
-    kwargs = dict(model=MODEL, max_tokens=16000, system=system_prompt(week), tools=SCHEMAS,
-                  output_config={"effort": EFFORT})
-    if USE_BETAS:
+    kwargs = dict(model=MODEL, max_tokens=16000, system=system_prompt(week), tools=SCHEMAS)
+    if not IS_CLAUDE:  # other models through OpenRouter's Anthropic-compatible endpoint: plain tool use
+        create = client.messages.create
+    elif USE_BETAS:
+        kwargs["output_config"] = {"effort": EFFORT}
         kwargs.update(thinking={"type": "adaptive", "display": "updates"}, fallbacks="default",
                       betas=["server-side-fallback-2026-07-01", "thinking-display-updates-2026-08-18"])
         create = client.beta.messages.create
     else:
-        kwargs.update(thinking={"type": "adaptive"})
+        kwargs.update(thinking={"type": "adaptive"}, output_config={"effort": EFFORT})
         create = client.messages.create
 
+    nudges = 0
     for _ in range(MAX_TURNS):
         resp = await create(messages=messages, **kwargs)
         messages.append({"role": "assistant", "content": resp.content})
@@ -91,6 +95,13 @@ async def run_week(week: str) -> AsyncIterator[dict]:
         if resp.stop_reason == "pause_turn":
             continue
         if resp.stop_reason != "tool_use":
+            missing = undisposed(ctx)
+            if missing and nudges < 2:  # completeness check in code: every activity needs a disposition
+                nudges += 1
+                yield {"type": "check", "text": f"Completeness check: {len(missing)} activities have no disposition"}
+                messages.append({"role": "user", "content": f"Completeness check failed: these activities have no "
+                                 f"disposition yet: {missing}. Bill, skip or hold each one, then finish."})
+                continue
             break
         results = []
         for block in resp.content:
@@ -104,7 +115,7 @@ async def run_week(week: str) -> AsyncIterator[dict]:
                 out = handler(ctx, **block.input)
                 if inspect.isawaitable(out):
                     out = await out
-                is_error = isinstance(out, dict) and out.get("accepted") is False
+                is_error = isinstance(out, dict) and out.get("accepted") in (False, "partial")
             except Exception as e:  # bad arguments etc: tell the model, don't crash the run
                 out, is_error = {"error": f"{type(e).__name__}: {e}"}, True
             store.audit("tool", name=block.name, input=block.input, output=out)

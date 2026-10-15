@@ -54,6 +54,11 @@ async def _serve():
     return cognee
 
 
+def _reconnect() -> None:
+    global _served
+    _served = False
+
+
 def mirror() -> list[dict]:
     if not MIRROR.exists():
         return []
@@ -64,12 +69,15 @@ async def remember(text: str, kind: str = "decision") -> dict:
     dataset = CONTEXT_DATASET if kind == "context" else decisions_dataset()
     row = {"ts": store.now(), "kind": kind, "dataset": dataset, "text": text, "backend": "local"}
     if enabled():
-        try:
-            cognee = await _serve()
-            await asyncio.wait_for(cognee.remember(text, dataset_name=dataset), timeout=180)
-            row["backend"] = "cognee"
-        except Exception as e:  # never block the demo on memory
-            row["error"] = str(e)[:200]
+        for attempt in range(2):
+            try:
+                cognee = await _serve()
+                await asyncio.wait_for(cognee.remember(text, dataset_name=dataset), timeout=180)
+                row["backend"], row["error"] = "cognee", None
+                break
+            except Exception as e:  # never block the demo on memory; reconnect once
+                row["error"] = str(e)[:200]
+                _reconnect()
     store.STATE.mkdir(exist_ok=True)
     with MIRROR.open("a") as f:
         f.write(json.dumps(row) + "\n")

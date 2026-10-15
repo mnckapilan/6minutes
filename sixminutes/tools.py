@@ -185,11 +185,15 @@ def mark_non_billable(ctx: WeekContext, activity_ids: list[str], rule_id: str, r
         excluded = any(a.get("thread_id") in firm["projects"][k].get("non_billable_threads", []) for k in signals)
         if not (policy.internal_only(a, firm) or set(signals) <= {"INTERNAL"} or excluded):
             blocked.append(a["id"])
+    rejection = None
     if blocked:
         store.audit("policy.rejected", tool="mark_non_billable", rule="R3", activity_ids=blocked, reason=reason)
-        return {"accepted": False, "rule": "R3",
-                "error": f"{blocked} look like client work (client signals, no manager exclusion). "
-                         "Bill them, or hold_for_review if unsure: skipping client work needs a manager decision."}
+        rejection = (f"{blocked} look like client work (client signals, no manager exclusion). Bill them, or "
+                     "hold_for_review if unsure: skipping client work needs a manager decision.")
+        activity_ids = [aid for aid in activity_ids if aid not in blocked]
+        acts = [ctx.by_id[aid] for aid in activity_ids]
+        if not acts:
+            return {"accepted": False, "rule": "R3", "error": rejection}
     pol = policy.effective_policy(firm)
     hours = round(sum(policy.activity_minutes(a, pol) for a in acts) / 60, 2)
     row = {"id": store.next_id(ledger, "NB"), "week": ctx.week, "consultant": acts[0]["consultant"],
@@ -199,7 +203,18 @@ def mark_non_billable(ctx: WeekContext, activity_ids: list[str], rule_id: str, r
     store.save_ledger(ledger)
     store.audit("non_billable", id=row["id"], activity_ids=activity_ids, hours=hours, rule=row["rule_id"],
                 reason=reason, memory=memory_used)
-    return {"accepted": True, "id": row["id"], "hours": hours}
+    out = {"accepted": True, "id": row["id"], "hours": hours, "skipped_ids": activity_ids}
+    if rejection:
+        out.update(accepted="partial", rule="R3", rejected_ids=blocked, error=rejection)
+    return out
+
+
+def undisposed(ctx: WeekContext) -> list[str]:
+    ledger = store.load_ledger()
+    done = {aid for e in ledger["entries"] for aid in e["activity_ids"]}
+    done |= {aid for s in ledger["skipped"] for aid in s["activity_ids"]}
+    done |= {aid for h in ledger["holds"] for aid in h["activity_ids"]}
+    return [a["id"] for a in ctx.activity if a["id"] not in done]
 
 
 def propose_assignment(ctx: WeekContext, consultant: str, project: str, role: str, from_date: str,
