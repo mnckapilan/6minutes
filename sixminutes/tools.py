@@ -13,6 +13,16 @@ class WeekContext:
         self.activity = store.load_activity(week)
         self.by_id = {a["id"]: a for a in self.activity}
         self.recalls: list[dict] = []
+        self.only_ids: set[str] | None = None  # re-run of a week: the agent may only touch these (new) activities
+
+
+def _out_of_scope(ctx: WeekContext, activity_ids: list[str]) -> dict | None:
+    """In a re-run only the new, undisposed activities may be touched (already-handled ones are never reopened)."""
+    if ctx.only_ids is None:
+        return None
+    bad = [a for a in activity_ids if a not in ctx.only_ids]
+    return {"accepted": False, "rule": "R1", "error": f"{bad} already have a disposition from an earlier run of "
+            f"{ctx.week}; this re-run only handles {sorted(ctx.only_ids)}"} if bad else None
 
 
 def _week_entries(ledger: dict, week: str) -> list[dict]:
@@ -37,7 +47,7 @@ def list_activity(ctx: WeekContext, consultant: str, week: str) -> dict:
                        for asg in p.get("assignments", []) if asg["consultant"] == consultant})
     rows = []
     for a in ctx.activity:
-        if a["consultant"] != consultant:
+        if a["consultant"] != consultant or (ctx.only_ids is not None and a["id"] not in ctx.only_ids):
             continue
         signals = policy.match_signals(a, firm)
         row = {
@@ -75,6 +85,8 @@ async def recall_memory(ctx: WeekContext, question: str) -> dict:
 
 def propose_time_entry(ctx: WeekContext, consultant: str, project: str, hours: float, activity_ids: list[str],
                        rule_id: str, confidence: float, reason: str, memory_used: str = "") -> dict:
+    if (bad := _out_of_scope(ctx, activity_ids)):
+        return bad
     firm, ledger = store.load_firm(), store.load_ledger()
     judgment = None
     try:
@@ -161,6 +173,8 @@ def _add_hold(ledger, kind, consultant, project, activity_ids, hours, reason, ru
 
 def hold_for_review(ctx: WeekContext, activity_ids: list[str], reason: str, project: str = "",
                     rule_id: str = "R6") -> dict:
+    if (bad := _out_of_scope(ctx, activity_ids)):
+        return bad
     firm, ledger = store.load_firm(), store.load_ledger()
     acts = [ctx.by_id.get(aid) for aid in activity_ids]
     if not activity_ids or None in acts:
@@ -193,6 +207,8 @@ def hold_for_review(ctx: WeekContext, activity_ids: list[str], reason: str, proj
 
 def mark_non_billable(ctx: WeekContext, activity_ids: list[str], rule_id: str, reason: str,
                       memory_used: str = "") -> dict:
+    if (bad := _out_of_scope(ctx, activity_ids)):
+        return bad
     firm, ledger = store.load_firm(), store.load_ledger()
     acts = [ctx.by_id.get(aid) for aid in activity_ids]
     if not activity_ids or None in acts:

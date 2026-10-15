@@ -45,6 +45,11 @@ Built for the Briefcase × Stripe hackathon (Track 02: agents that collect, plus
 
 Policies stack: firm default → client override → project override (`firm.yaml`).
 
+The demo firm (Northbeam Advisory) has 8 consultants and 6 client projects: Acme Q3 Audit, Globex Strategy (client
+confidence override), Brightwater Regulatory and Grid Resilience (tight PO cap), Kestrel Trial Supply (project confidence
+override) and Lumen CX. The headline story is Sam on Acme; Hannah hits PO-4471 in W43; a Kestrel business-development
+email is held under R6.
+
 ## Architecture
 
 ```

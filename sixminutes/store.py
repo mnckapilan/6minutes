@@ -1,6 +1,7 @@
 """Persistent state: firm config (state/firm.yaml), ledger (state/ledger.json) and audit trail (state/audit.jsonl)."""
 
 import json
+import os
 import shutil
 import threading
 from datetime import datetime, timezone
@@ -12,11 +13,12 @@ from dotenv import load_dotenv
 ROOT = Path(__file__).resolve().parent.parent
 load_dotenv(ROOT / ".env", override=True)
 
-STATE = ROOT / "state"
+STATE = Path(os.environ.get("SIXMIN_STATE_DIR") or ROOT / "state")  # override to run a throwaway copy
 FIRM_BASE = ROOT / "firm.yaml"
 FIRM = STATE / "firm.yaml"
 LEDGER = STATE / "ledger.json"
 AUDIT = STATE / "audit.jsonl"
+INJECTED = STATE / "injected.json"   # live-demo overlay: activity dropped in mid-demo (cleared by reset)
 ACTIVITY = ROOT / "data" / "activity"
 
 _lock = threading.RLock()
@@ -44,6 +46,7 @@ def reset() -> None:
         shutil.copy(FIRM_BASE, FIRM)
         save_ledger({**json.loads(json.dumps(EMPTY_LEDGER)), "customers": customers})
         AUDIT.write_text("")
+        INJECTED.unlink(missing_ok=True)
 
 
 def ensure() -> None:
@@ -92,5 +95,27 @@ def read_audit(limit: int = 500) -> list[dict]:
     return [json.loads(line) for line in lines[-limit:] if line.strip()]
 
 
+def weeks() -> list[str]:
+    """The weeks that have an activity feed (data/activity/W*.json), oldest first. The one place weeks are defined."""
+    return sorted(p.stem for p in ACTIVITY.glob("W*.json"))
+
+
+def load_injected() -> list[dict]:
+    if not INJECTED.exists():
+        return []
+    try:
+        return json.loads(INJECTED.read_text())
+    except ValueError:
+        return []
+
+
+def save_injected(items: list[dict]) -> None:
+    with _lock:
+        STATE.mkdir(exist_ok=True)
+        INJECTED.write_text(json.dumps(items, indent=1))
+
+
 def load_activity(week: str) -> list[dict]:
-    return json.loads((ACTIVITY / f"{week}.json").read_text())
+    """The week's feed: data/activity/<week>.json plus anything injected live (state/injected.json)."""
+    base = json.loads((ACTIVITY / f"{week}.json").read_text())
+    return base + [a for a in load_injected() if a["id"].startswith(week + "-")]

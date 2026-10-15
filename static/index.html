@@ -95,7 +95,7 @@ a{color:var(--accent);text-decoration:none} a:hover{text-decoration:underline}
 .chip:active{cursor:grabbing}
 .chip.dragging{opacity:.4}
 .chip.ghost{border-style:dashed;background:var(--accent-soft);border-color:#c7c3ff;cursor:pointer}
-.av{width:30px;height:30px;border-radius:50%;display:grid;place-items:center;font-weight:600;font-size:12px;color:#fff;flex:none}
+.av{position:relative;overflow:hidden;width:30px;height:30px;border-radius:50%;display:grid;place-items:center;font-weight:600;font-size:12px;color:#fff;flex:none}
 .chip .nm{font-weight:500}
 .chip .meta{font-size:12px;color:var(--muted)}
 .chip .util{margin-left:auto;text-align:right;font-size:12px;font-variant-numeric:tabular-nums}
@@ -135,35 +135,98 @@ a{color:var(--accent);text-decoration:none} a:hover{text-decoration:underline}
 .pcard{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:16px;cursor:pointer}
 .pcard:hover{border-color:var(--accent)}
 .prof-h{display:flex;align-items:center;gap:14px;margin-bottom:16px}
+.av img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.av.sm{width:18px;height:18px;font-size:8px;display:inline-grid;vertical-align:-4px;margin-right:4px}
 .prof-h .av{width:52px;height:52px;font-size:18px}
 .modal textarea{width:100%;font:inherit;padding:7px 10px;border:1px solid var(--line);border-radius:8px;min-height:60px}
 @media (max-width:1000px){.item{grid-template-columns:44px 28px minmax(0,1fr) 56px;}.item .ptag,.item .disp{grid-column:3/-1}}
 @media (max-width:1000px){.dgrid{grid-template-columns:repeat(2,1fr)}.dcols{grid-template-columns:1fr}}
 @media (max-width:1000px){.grid{grid-template-columns:1fr}.stats{grid-template-columns:repeat(2,1fr)}}
+.clk{cursor:pointer}
+tr.clk:hover td{background:#faf9ff}
+.card.clk:hover{border-color:#c7c3ff}
+.item.clk:hover{border-color:#c7c3ff;box-shadow:0 1px 3px rgba(16,24,40,.06)}
+.pill.new{background:var(--accent);color:#fff;font-family:Inter,system-ui,sans-serif;font-weight:600;letter-spacing:.04em}
+.steps{display:flex;align-items:center;gap:6px;padding:8px 24px;background:var(--panel);border-bottom:1px solid var(--line);overflow-x:auto}
+.steps .sb{display:flex;align-items:center;gap:8px;flex:none;border:1px solid var(--line);background:var(--panel);border-radius:99px;padding:4px 12px 4px 5px;font-size:13px;color:var(--muted);white-space:nowrap}
+.steps .sb .n{width:20px;height:20px;border-radius:50%;display:grid;place-items:center;font-size:11px;font-weight:600;background:var(--soft);color:var(--muted)}
+.steps .sb.done{color:var(--ok);border-color:#bfe5d4;background:var(--ok-soft)}
+.steps .sb.done .n{background:var(--ok);color:#fff}
+.steps .sb.cur{color:var(--accent);border-color:var(--accent);background:var(--accent-soft);font-weight:600;box-shadow:0 0 0 3px var(--accent-soft)}
+.steps .sb.cur .n{background:var(--accent);color:#fff}
+.steps .sep{width:14px;height:1px;background:var(--line);flex:none}
+.steps .grow{min-width:8px}
+.drawer-bg{position:fixed;inset:0;background:rgba(16,24,40,.3);z-index:18}
+.drawer{position:fixed;top:0;right:0;bottom:0;width:min(600px,100%);background:var(--bg);z-index:19;box-shadow:-12px 0 32px rgba(16,24,40,.15);display:flex;flex-direction:column;animation:slidein .18s ease-out}
+@keyframes slidein{from{transform:translateX(40px);opacity:0}to{transform:none;opacity:1}}
+.drawer-h{display:flex;gap:10px;align-items:flex-start;padding:16px 18px;background:var(--panel);border-bottom:1px solid var(--line)}
+.drawer-h h3{margin:0;font-size:16px;letter-spacing:-.01em}
+.drawer-body{overflow:auto;padding:14px 18px 40px;flex:1}
+.dsec{background:var(--panel);border:1px solid var(--line);border-radius:12px;margin-bottom:12px;overflow:hidden}
+.dsec>h4{margin:0;padding:9px 14px;font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);border-bottom:1px solid var(--line);display:flex;gap:8px;align-items:center}
+.dsec>div{padding:10px 14px}
+.dact{display:grid;grid-template-columns:42px 24px minmax(0,1fr) auto;gap:8px;align-items:start;padding:7px 0;border-bottom:1px dashed var(--soft)}
+.dact:last-child{border-bottom:none}
+.jbar{position:relative;height:8px;background:var(--soft);border-radius:99px;margin:8px 0 4px}
+.jbar i{display:block;height:100%;border-radius:99px;background:var(--ok)}
+.jbar i.low{background:var(--warn)}
+.jbar b{position:absolute;top:-4px;width:2px;height:16px;background:var(--ink)}
+.decbox{border:1px solid #c7c3ff;background:linear-gradient(0deg,#fff,#faf9ff);border-radius:10px;padding:10px 12px}
+.refs{display:flex;gap:6px;flex-wrap:wrap;margin-top:6px}
+.refs .pill{cursor:pointer}
+.refs .pill:hover{filter:brightness(.95)}
+details.aud summary{cursor:pointer;color:var(--muted);font-size:12px}
+.cmp-sum{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:16px}
+.cmp{background:var(--panel);border:1px solid var(--line);border-radius:12px;margin-bottom:12px;overflow:hidden}
+.cmp-h{padding:10px 16px;border-bottom:1px solid var(--line);display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.cmp-h b{font-size:14px}
+.cmp-cols{display:grid;grid-template-columns:minmax(0,1fr) 28px minmax(0,1fr)}
+.cmp-cols>div{padding:12px 16px}
+.cmp-cols .arrow{display:grid;place-items:center;color:var(--accent);font-size:18px;padding:0}
+.cmp-cols .before{background:var(--soft)}
+.cmp-cols .after{background:var(--ok-soft)}
+.cmp-cols .lbl{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);margin-bottom:4px}
+.cmp .decbox{margin:12px 16px 14px}
+.modal.wide{width:580px;max-height:calc(100% - 32px);overflow:auto}
+.fgrid{display:grid;grid-template-columns:1fr 1fr;gap:0 12px}
+.fgrid .full{grid-column:1/-1}
+.presets{display:flex;flex-direction:column;gap:6px;margin-bottom:6px}
+.presets button{text-align:left;display:block;width:100%}
+.presets button.active{border-color:var(--accent);background:var(--accent-soft)}
+.presets .why{font-weight:400}
+@media (max-width:1000px){.cmp-sum{grid-template-columns:repeat(2,1fr)}.cmp-cols{grid-template-columns:1fr}.cmp-cols .arrow{padding:2px;transform:rotate(90deg)}.steps{padding:8px 12px}.fgrid{grid-template-columns:1fr}header{flex-wrap:wrap;padding:12px}}
 </style>
 </head>
 <body>
 <header>
   <div class="logo">6<span>minutes</span></div>
-  <div class="views"><button data-view="billing" class="active">Billing</button><button data-view="activity">Activity</button><button data-view="projects">Projects</button><button data-view="people">People</button></div>
+  <div class="views"><button data-view="billing" class="active">Billing</button><button data-view="activity">Activity</button><button data-view="compare">Compare</button><button data-view="projects">Projects</button><button data-view="people">People</button></div>
   <div class="grow"></div>
   <span class="badge" id="b-model"></span>
   <span class="badge on" id="b-jev" title="TypeSafe JEV decisions model scores every judgment call">JEV</span>
   <span class="badge" id="b-cognee">Cognee</span>
   <span class="badge" id="b-stripe">Stripe</span>
-  <button class="primary" id="run-W42" onclick="runWeek('W42')">Run W42</button>
-  <button class="primary" id="run-W43" onclick="runWeek('W43')">Run W43</button>
-  <button onclick="resetAll()">Reset</button>
+  <span id="run-btns" style="display:flex;gap:8px"></span>
 </header>
+<div class="steps" id="steps"></div>
 <main id="view-activity" hidden>
   <div class="feed-top">
     <h2 style="margin:0;font-size:18px">Activity feed</h2>
-    <span class="why">What the agent reads: consultants' emails, calls, Teams and document edits (mock), tagged with where each one ended up.</span>
+    <span class="why">What the agent reads: consultants' emails, calls, Teams and document edits (mock), tagged with where each one ended up. Click any item for its evidence.</span>
+    <span class="grow"></span><button class="small" onclick="openInject()">✉ Drop in an email</button>
   </div>
   <div class="feed-top">
     <div class="seg" id="f-week"></div><div class="seg" id="f-cons"></div><div class="seg" id="f-kind"></div><div class="seg" id="f-disp"></div>
   </div>
   <div id="feed"></div>
+</main>
+<main id="view-compare" hidden>
+  <div class="feed-top">
+    <h2 style="margin:0;font-size:18px">What memory changed</h2>
+    <span class="why">Later-week work that was handled differently because of an earlier decision or remembered context. Everything here is derived from the ledger, decisions and audit trail.</span>
+  </div>
+  <div class="feed-top"><div class="seg" id="c-week"></div></div>
+  <div id="compare"></div>
 </main>
 <main id="view-people" hidden><div id="people"></div></main>
 <main id="view-projects" hidden>
@@ -188,7 +251,7 @@ a{color:var(--accent);text-decoration:none} a:hover{text-decoration:underline}
   <div class="grid">
     <section class="panel">
       <h2>Agent <span class="count" id="run-status">idle</span></h2>
-      <div id="log"><div class="empty">Press <b>Run W42</b> to let the agent work through the week.</div></div>
+      <div id="log"><div class="empty">Follow the demo steps above, or press <b>Run</b> to let the agent work through a week.</div></div>
     </section>
     <div style="display:flex;flex-direction:column;gap:16px;min-width:0">
       <section class="panel">
@@ -213,6 +276,7 @@ a{color:var(--accent);text-decoration:none} a:hover{text-decoration:underline}
   </section>
 </main>
 
+<div id="drawer-root"></div>
 <script>
 let S = null, tab = 'timesheets', running = false;
 const $ = id => document.getElementById(id);
@@ -225,6 +289,7 @@ const dlabel = d => new Date(d + 'T00:00').toLocaleDateString('en-GB', {day: 'nu
 
 async function load() {
   S = await (await fetch('/api/state')).json();
+  fWeek ||= S.weeks[0]?.id; pWeek ||= S.weeks[0]?.id; cmpB ||= S.weeks[S.weeks.length - 1]?.id;
   render();
 }
 
@@ -240,7 +305,8 @@ function render() {
   $('s-recovered').textContent = gbp(st.recovered);
   $('s-held').textContent = st.held + 'h';
   $('s-invoiced').textContent = gbp(st.invoiced);
-  renderInbox(); renderInvoices(); renderTab(); renderBoard();
+  renderRunBtns(); renderSteps(); renderInbox(); renderInvoices(); renderTab(); renderBoard();
+  if (view === 'compare') loadCompare();
   if (detailKey) renderDetail(detailKey);
   if (view === 'activity' || (view === 'people' && profile)) loadFeed();
   else if (view === 'people') renderPeople();
@@ -250,6 +316,7 @@ function render() {
 let view = 'billing', detailKey = null, dragCons = null, dragFrom = null;
 const COLORS = ['#635bff', '#12805c', '#c4320a', '#0e7090', '#a11043', '#5925dc'];
 const color = c => COLORS[Object.keys(S.firm.consultants).indexOf(c) % COLORS.length];
+const avatar = (c, cls = '', style = '') => { const u = S.firm.consultants[c]?.avatar; return `<div class="av ${cls}" style="background:${color(c)};${style}">${S.firm.consultants[c] ? initials(c) : ''}${u ? `<img src="${esc(u)}" alt="" loading="lazy" onerror="this.remove()">` : ''}</div>`; };
 const initials = c => S.firm.consultants[c].name.split(' ').map(w => w[0]).join('');
 const today = () => new Date().toISOString().slice(0, 10);
 const current = a => String(a.end || '2099-12-31') >= today();
@@ -258,10 +325,11 @@ const latestWeek = () => [...new Set(S.ledger.entries.map(e => e.week))].sort().
 function setView(v) {
   view = v;
   document.querySelectorAll('.views button').forEach(b => b.classList.toggle('active', b.dataset.view === v));
-  for (const n of ['billing', 'activity', 'projects', 'people']) $('view-' + n).hidden = v !== n;
+  for (const n of ['billing', 'activity', 'compare', 'projects', 'people']) $('view-' + n).hidden = v !== n;
   if (v === 'projects') showDetail(null);
   if (v === 'activity') loadFeed();
   if (v === 'people') { profile = null; renderPeople(); }
+  if (v === 'compare') { loadCompare(); try { localStorage.setItem('cmpSeen', '1'); } catch (e) {} renderSteps(); }
 }
 document.querySelectorAll('.views button').forEach(b => b.onclick = () => setView(b.dataset.view));
 
@@ -275,7 +343,7 @@ function projectStats(k) {
 function chip(c, k, a, hours) {
   const util = a && a.hours_per_week ? `<div class="util"><b>${hours.toFixed(1)}</b>/${a.hours_per_week}h<div class="meta">this wk</div></div>` : '';
   return `<div class="chip" draggable="true" data-cons="${c}" data-from="${k || ''}">
-    <div class="av" style="background:${color(c)}">${initials(c)}</div>
+    ${avatar(c)}
     <div><div class="nm">${S.firm.consultants[c].name}</div>
     <div class="meta">${a ? `${a.role} · ${gbp(a.rate || S.firm.projects[k].effective_policy.rate_card[a.role])}/h${a.decision ? ` · <span class="pill acc">${a.decision}</span>` : ''}` : S.firm.consultants[c].title}</div></div>${util}</div>`;
 }
@@ -291,7 +359,7 @@ function renderBoard() {
         ${st.cap ? `<div class="bar ${pct >= 100 ? 'full' : ''}"><i style="width:${pct}%"></i></div><div class="why">${gbp(st.billed)} of ${gbp(st.cap)} PO</div>` : ''}</div>
       <div class="chips">${asg.map(a => chip(a.consultant, k, a, st.hoursBy(a.consultant))).join('')}
         ${props.map(x => `<div class="chip ghost" onclick="setView('billing')" title="Open in Needs a decision">
-          <div class="av" style="background:${color(x.consultant)};opacity:.6">${initials(x.consultant)}</div>
+          ${avatar(x.consultant, '', 'opacity:.6')}
           <div><div class="nm">${first(x.consultant)}? <span class="pill acc">proposed</span></div>
           <div class="meta">${x.evidence.hours}h unassigned work · drop ${first(x.consultant)} here to approve</div></div></div>`).join('')}
         ${asg.length || props.length ? '' : '<div class="drophint">Drop a person here</div>'}</div></div>`;
@@ -406,15 +474,15 @@ function renderDetail(k) {
     </div>
     <section class="panel" style="margin-bottom:16px"><h2>Time entries <span class="count">${st.es.length}</span></h2><div class="body">${st.es.length ? `<table>
       <tr><th>Week</th><th>Day</th><th>Person</th><th class="num">Hours</th><th class="num">Amount</th><th>Rule</th><th>Why</th><th>Invoice</th></tr>
-      ${st.es.map(e => `<tr><td>${e.week}</td><td>${e.days.map(dlabel).join(', ')}</td><td>${first(e.consultant)} <span class="why">${e.role}</span></td>
+      ${st.es.map(e => `<tr class="clk" onclick="ev(event,'${e.id}')"><td>${e.week}</td><td>${e.days.map(dlabel).join(', ')}</td><td>${first(e.consultant)} <span class="why">${e.role}</span></td>
         <td class="num">${e.hours.toFixed(1)}</td><td class="num">${gbp(e.amount)}</td>
         <td><span class="pill ok">${e.rule_id}</span>${e.decision_ref ? ` <span class="pill acc">${e.decision_ref}</span>` : ''} ${e.jev ? jevPill(e.jev.p) : ''}</td>
         <td class="why">${esc(e.reason)}${e.decision_note ? ' · <b>' + esc(e.decision_note) + '</b>' : ''}</td>
         <td class="mono">${e.invoice_id ? esc(e.invoice_id.slice(0, 14)) : '<span class="pill">pending</span>'}</td></tr>`).join('')}</table>` : '<div class="empty">No time billed yet.</div>'}</div></section>
     <div class="dcols">
-      <section class="panel"><h2>Holds &amp; guardrails <span class="count">${holds.length}</span></h2><div class="body">${holds.map(h => `<div class="card ${h.type === 'po_cap' ? 'cap' : ''}">
+      <section class="panel"><h2>Holds &amp; guardrails <span class="count">${holds.length}</span></h2><div class="body">${holds.map(h => `<div class="card clk ${h.type === 'po_cap' ? 'cap' : ''}" onclick="ev(event,'${h.id}')">
         <div class="kind">${h.rule} · ${h.type} · ${first(h.consultant)} · ${h.status}</div>${esc(h.reason)}<div class="why">${h.hours.toFixed(1)}h · ${h.week}</div></div>`).join('') || '<div class="empty">None.</div>'}</div></section>
-      <section class="panel"><h2>Invoices <span class="count">${invs.length}</span></h2><div class="body">${invs.length ? `<table>${invs.map(i => `<tr>
+      <section class="panel"><h2>Invoices <span class="count">${invs.length}</span></h2><div class="body">${invs.length ? `<table>${invs.map(i => `<tr class="clk" onclick="ev(event,'${i.id}')">
         <td class="mono">${i.dashboard_url ? `<a href="${i.dashboard_url}" target="_blank">${esc(i.number || i.id.slice(0, 14))}</a>` : esc(i.id.slice(0, 14))}</td>
         <td>${i.period}${i.memo ? ` <span class="why">${esc(i.memo)}</span>` : ''}</td><td class="num">${gbp(i.amount)}</td>
         <td><span class="pill ${i.status === 'paid' ? 'ok' : 'acc'}">${i.status}</span></td></tr>`).join('')}</table>` : '<div class="empty">No invoices yet.</div>'}</div></section>
@@ -427,7 +495,7 @@ function renderInbox() {
     const ev = p.evidence, cur = Object.entries(S.firm.projects)
       .filter(([k, pr]) => k !== 'INTERNAL' && pr.assignments.some(a => a.consultant === p.consultant)).map(([k]) => pname(k));
     out.push(`<div class="card proposal"><div class="kind">Staffing proposal · R7</div>
-      <div><b>${first(p.consultant)}</b> (${p.role}${cur.length ? ', assigned to ' + cur.join(', ') : ''}) spent
+      <div>${avatar(p.consultant, 'sm')}<b>${first(p.consultant)}</b> (${p.role}${cur.length ? ', assigned to ' + cur.join(', ') : ''}) spent
       <b>~${ev.hours}h on ${pname(p.project)}</b> this week: ${ev.client_calls} client calls, ${ev.doc_edits} edits to
       <span class="mono">${esc(ev.files.join(', '))}</span>, ${ev.emails} emails on the project thread.
       Add ${first(p.consultant)} to ${pname(p.project)} as ${p.role} at ${gbp(p.rate)}/h from ${dlabel(p.from_date)}?</div>
@@ -439,14 +507,14 @@ function renderInbox() {
   }
   for (const h of L.holds.filter(h => h.status === 'open' && !(h.proposal_id && L.proposals.find(p => p.id === h.proposal_id && p.status === 'open')))) {
     if (h.type === 'po_cap') {
-      out.push(`<div class="card cap"><div class="kind">Guardrail · R5 PO cap</div>
+      out.push(`<div class="card cap clk" onclick="ev(event,'${h.id}')"><div class="kind">Guardrail · R5 PO cap</div>
         <div><b>${pname(h.project)}</b> hit its PO cap (${gbp(S.firm.projects[h.project].effective_policy.po_cap_gbp)}).
         Billing stopped: <b>${h.hours}h (${gbp(h.amount)})</b> of ${h.week} work not billed.</div>
         <div class="why">Flagged to the engagement manager to raise a change order. ${h.activity_ids.length} activities.</div>
         <div class="actions"><button class="small" onclick="decide('${h.id}','ignore')">Acknowledge</button></div></div>`);
     } else {
       const acts = h.activity_ids.length;
-      out.push(`<div class="card"><div class="kind">Held · ${h.rule} · ${first(h.consultant)}${h.project ? ' · ' + pname(h.project) : ''}</div>
+      out.push(`<div class="card clk" onclick="ev(event,'${h.id}')"><div class="kind">Held · ${h.rule} · ${avatar(h.consultant, 'sm')}${first(h.consultant)}${h.project ? ' · ' + pname(h.project) : ''}</div>
         <div>${esc(h.reason)}</div><div class="why">${h.hours.toFixed(1)}h · ${acts} activities · ${h.week} ${h.jev_internal ? jevPill(h.jev_internal.p, 'JEV internal') : ''}</div>
         <div class="actions"><button class="small" onclick="decide('${h.id}','approve')">Bill it</button>
         <button class="small" onclick="decide('${h.id}','not_billable')">Not billable</button>
@@ -461,7 +529,7 @@ function renderInvoices() {
   const inv = S.ledger.invoices.slice().reverse();
   $('inv-count').textContent = inv.length;
   $('invoices').innerHTML = inv.length ? `<table><tr><th>Invoice</th><th>Project</th><th>Period</th><th class="num">Amount</th><th>Status</th><th></th></tr>` +
-    inv.map(i => `<tr><td class="mono">${i.dashboard_url ? `<a href="${i.dashboard_url}" target="_blank">${esc(i.number || i.id.slice(0, 14))}</a>` : esc(i.id.slice(0, 14))}</td>
+    inv.map(i => `<tr class="clk" onclick="ev(event,'${i.id}')"><td class="mono">${i.dashboard_url ? `<a href="${i.dashboard_url}" target="_blank">${esc(i.number || i.id.slice(0, 14))}</a>` : esc(i.id.slice(0, 14))}</td>
       <td>${pname(i.project)}${i.memo ? `<div class="why">${esc(i.memo)}</div>` : ''}</td><td>${i.period}</td>
       <td class="num">${gbp(i.amount)}${i.credited ? `<div class="why" style="color:var(--warn)">−${gbp(i.credited)} credited</div>` : ''}</td><td><span class="pill ${i.status === 'paid' ? 'ok' : 'acc'}">${i.status}</span></td>
       <td>${i.status !== 'paid' ? `<button class="small" onclick="markPaid('${i.id}')">Mark paid</button>` : (i.hosted_invoice_url ? `<a href="${i.hosted_invoice_url}" target="_blank">view</a>` : '')}</td></tr>`).join('') + '</table>'
@@ -480,13 +548,13 @@ function renderTab() {
       const tot = es.reduce((a, e) => a + e.hours, 0);
       return `<h3 style="margin:8px 0">${S.firm.consultants[c].name} <span class="why">· ${S.firm.consultants[c].title} · ${tot.toFixed(1)}h billed · ${sk.reduce((a, s) => a + s.hours, 0).toFixed(1)}h non-billable</span></h3>
       <table><tr><th>Week</th><th>Day</th><th>Project</th><th class="num">Hours</th><th class="num">Amount</th><th>Rule</th><th>Why</th><th>Invoice</th></tr>
-      ${es.map(e => `<tr><td>${e.week}</td><td>${e.days.map(dlabel).join(', ')}</td><td>${pname(e.project)}</td>
+      ${es.map(e => `<tr class="clk" onclick="ev(event,'${e.id}')"><td>${e.week}</td><td>${e.days.map(dlabel).join(', ')}</td><td>${pname(e.project)}</td>
         <td class="num">${e.hours.toFixed(1)}</td><td class="num">${gbp(e.amount)}</td>
         <td><span class="pill ok">${e.rule_id}</span> ${e.decision_ref ? `<span class="pill acc">${e.decision_ref}</span>` : ''} ${e.jev ? jevPill(e.jev.p) : ''}</td>
         <td class="why">${esc(e.reason)}${e.decision_note ? ' · <b>' + esc(e.decision_note) + '</b>' : ''}${e.flags.length ? '<br><span style="color:var(--warn)">' + e.flags.map(esc).join('<br>') + '</span>' : ''}</td>
         <td>${e.invoice_id ? '<span class="pill ok">invoiced</span>' : '<span class="pill">pending</span>'}</td></tr>`).join('')}
-      ${sk.map(s => `<tr><td>${s.week}</td><td></td><td class="why">non-billable</td><td class="num why">${s.hours.toFixed(1)}</td><td></td><td><span class="pill">${s.rule_id}</span></td><td class="why">${esc(s.reason)}</td><td></td></tr>`).join('')}
-      ${hd.map(h => `<tr><td>${h.week}</td><td></td><td class="why">${h.project ? pname(h.project) : ''}</td><td class="num why">${h.hours.toFixed(1)}</td><td></td><td><span class="pill warn">${h.rule}</span></td><td class="why">held: ${esc(h.reason)}</td><td><span class="pill">${h.status}</span></td></tr>`).join('')}
+      ${sk.map(s => `<tr class="clk" onclick="ev(event,'${s.id}')"><td>${s.week}</td><td></td><td class="why">non-billable</td><td class="num why">${s.hours.toFixed(1)}</td><td></td><td><span class="pill">${s.rule_id}</span></td><td class="why">${esc(s.reason)}</td><td></td></tr>`).join('')}
+      ${hd.map(h => `<tr class="clk" onclick="ev(event,'${h.id}')"><td>${h.week}</td><td></td><td class="why">${h.project ? pname(h.project) : ''}</td><td class="num why">${h.hours.toFixed(1)}</td><td></td><td><span class="pill warn">${h.rule}</span></td><td class="why">held: ${esc(h.reason)}</td><td><span class="pill">${h.status}</span></td></tr>`).join('')}
       </table>`;
     }).join('');
   } else if (tab === 'audit') {
@@ -521,7 +589,7 @@ document.querySelectorAll('.tabs button').forEach(b => b.onclick = () => { tab =
 
 // ---- activity feed + people profiles
 const FEED = {};
-let fWeek = 'W42', fCons = 'all', fKind = 'all', fDisp = 'all', profile = null, pWeek = 'W42';
+let fWeek = null, fCons = 'all', fKind = 'all', fDisp = 'all', profile = null, pWeek = null, cmpB = null;
 const KIND = {call: ['📞', 'Call'], email: ['✉️', 'Email'], teams: ['💬', 'Teams'], doc_edit: ['📝', 'Doc edit']};
 const DLABEL = {billed: 'Billed', held: 'Held', non_billable: 'Non-billable', pending: 'Not processed', released: 'Released', ignored: 'Ignored'};
 
@@ -537,7 +605,7 @@ function seg(id, opts, cur, on) {
 }
 
 function renderFeedView() {
-  seg('f-week', [['W42', 'W42 · 12–16 Oct'], ['W43', 'W43 · 19–23 Oct']], fWeek, v => { fWeek = v; loadFeed(); });
+  seg('f-week', S.weeks.map(w => [w.id, `${w.id} · ${w.label}`]), fWeek, v => { fWeek = v; loadFeed(); });
   const people = [...new Set((FEED[fWeek] || []).map(a => a.consultant))];
   seg('f-cons', [['all', 'Everyone'], ...people.map(c => [c, first(c)])], fCons, v => { fCons = v; renderFeedView(); });
   seg('f-kind', [['all', 'All kinds'], ...Object.entries(KIND).map(([k, [i, l]]) => [k, i + ' ' + l])], fKind, v => { fKind = v; renderFeedView(); });
@@ -562,7 +630,7 @@ function feedHTML(items, showWho) {
 function itemHTML(a, showWho) {
   const [ico] = KIND[a.kind] || ['•'], d = a.disposition;
   const meta = [];
-  if (showWho) meta.push(`<span class="who" onclick="openProfile('${a.consultant}')">${first(a.consultant)}</span>`);
+  if (showWho) meta.push(`<span class="who" onclick="openProfile('${a.consultant}')">${avatar(a.consultant, 'sm')}${first(a.consultant)}</span>`);
   if (a.participants) meta.push(esc(a.participants.filter(p => !p.startsWith(a.consultant + '@')).join(', ')));
   if (a.channel) meta.push(esc(a.channel) + (a.messages ? ` · ${a.messages} messages` : ''));
   if (a.path) meta.push(`<span class="mono">${esc(a.path)}</span>` + (a.edits ? ` · ${a.edits} edits` : ''));
@@ -576,10 +644,10 @@ function itemHTML(a, showWho) {
     billed: `<span class="pill ok">Billed · ${d.id}</span> ${d.decision ? `<span class="pill acc">${d.decision}</span>` : ''}${d.overage ? ` <span class="pill warn">part over PO cap</span>` : ''}<br>${inv ? (inv.dashboard_url ? `<a href="${inv.dashboard_url}" target="_blank">${esc(inv.number || inv.id.slice(0, 14))}</a>` : esc(inv.id.slice(0, 14))) : '<span class="why">not invoiced yet</span>'}`,
     held: `<span class="pill warn">Held · ${d.id} · ${d.rule}</span><br><span class="why">${esc(d.reason || '').slice(0, 60)}</span>`,
     non_billable: `<span class="pill">Non-billable · ${d.rule}</span><br><span class="why">${esc(d.reason || '').slice(0, 60)}</span>`,
-    pending: '<span class="pill">Not processed</span>',
+    pending: '<span class="pill warn">Not processed</span>',
   }[d.type] || `<span class="pill">${DLABEL[d.type] || d.type} · ${d.id}</span>`;
-  return `<div class="item st-${d.type}" title="${esc(d.reason || '')}"><div class="tm">${a.ts.slice(11, 16)}</div><div class="kico">${ico}</div>
-    <div style="min-width:0"><div class="ttl">${esc(a.title)}</div><div class="mt">${meta.join(' · ')}</div></div>
+  return `<div class="item clk st-${d.type}" onclick="ev(event,'${d.type === 'pending' ? a.id : d.id}')" title="${esc(d.reason || '')}"><div class="tm">${a.ts.slice(11, 16)}</div><div class="kico">${ico}</div>
+    <div style="min-width:0"><div class="ttl">${a.injected ? '<span class="pill new">NEW</span> ' : ''}${esc(a.title)}</div><div class="mt">${meta.join(' · ')}</div></div>
     <div class="mins">${a.minutes}m</div><div>${tag}</div><div class="disp">${disp}</div></div>`;
 }
 
@@ -590,7 +658,7 @@ function renderPeople() {
       const on = Object.entries(S.firm.projects).filter(([k, pr]) => pr.assignments.some(a => a.consultant === c && current(a)));
       const h = S.ledger.entries.filter(e => e.consultant === c && e.week === wk).reduce((s, e) => s + e.hours, 0);
       return `<div class="pcard" onclick="openProfile('${c}')"><div style="display:flex;gap:12px;align-items:center">
-        <div class="av" style="background:${color(c)}">${initials(c)}</div><div><b>${p.name}</b><div class="why">${p.title} · ${gbp(S.firm.firm.policy.rate_card[p.title])}/h</div></div></div>
+        ${avatar(c)}<div><b>${p.name}</b><div class="why">${p.title} · ${gbp(S.firm.firm.policy.rate_card[p.title])}/h</div></div></div>
         <div class="why" style="margin-top:10px">${on.map(([k, pr]) => pr.name).join(' · ') || 'On the bench'}</div>
         <div style="margin-top:6px;font-size:13px"><b>${h.toFixed(1)}h</b> billed ${wk || ''}</div></div>`;
     }).join('') + '</div>';
@@ -607,7 +675,7 @@ function renderProfile() {
   const feed = (FEED[pWeek] || []).filter(a => a.consultant === c);
   $('people').innerHTML = `
     <div class="prof-h"><button onclick="profile=null;renderPeople()">← People</button>
-      <div class="av" style="background:${color(c)}">${initials(c)}</div>
+      ${avatar(c)}
       <div><h2 style="margin:0;font-size:22px">${p.name}</h2><div class="why">${p.title} · ${esc(p.email)} · standard rate ${gbp(S.firm.firm.policy.rate_card[p.title])}/h</div></div></div>
     <div class="dgrid">
       <div class="stat"><div class="k">Billed hours</div><div class="v">${es.reduce((s, e) => s + e.hours, 0).toFixed(1)}</div></div>
@@ -621,18 +689,18 @@ function renderProfile() {
           <td class="why">${dlabel(String(a.start))} → ${dlabel(String(a.end || '2099-12-31'))}</td>
           ${weeks.map(w => { const h = es.filter(e => e.project === a.k && e.week === w).reduce((s, e) => s + e.hours, 0); return `<td class="num" style="${a.hours_per_week && h > a.hours_per_week ? 'color:var(--warn);font-weight:600' : ''}">${h ? h.toFixed(1) : '-'}</td>`; }).join('')}
           <td class="num">${a.hours_per_week || '-'}</td></tr>`).join('') || '<tr><td colspan="9" class="why">No assignments.</td></tr>'}</table></div></section>
-      <section class="panel"><h2>Held for review <span class="count">${hd.length}</span></h2><div class="body">${hd.map(h => `<div class="card"><div class="kind">${h.rule} · ${h.project ? pname(h.project) : ''} · ${h.week}</div>${esc(h.reason)}<div class="why">${h.hours.toFixed(1)}h · ${h.activity_ids.length} activities · a manager decides in Billing → Needs a decision</div></div>`).join('') || '<div class="empty">Nothing held.</div>'}</div></section>
+      <section class="panel"><h2>Held for review <span class="count">${hd.length}</span></h2><div class="body">${hd.map(h => `<div class="card clk" onclick="ev(event,'${h.id}')"><div class="kind">${h.rule} · ${h.project ? pname(h.project) : ''} · ${h.week}</div>${esc(h.reason)}<div class="why">${h.hours.toFixed(1)}h · ${h.activity_ids.length} activities · a manager decides in Billing → Needs a decision</div></div>`).join('') || '<div class="empty">Nothing held.</div>'}</div></section>
     </div>
     <section class="panel" style="margin-bottom:16px"><h2>Billables <span class="count">${es.length}</span><span class="why" style="font-weight:400">· edit or write down your time; changes are policy-checked, and invoiced lines are corrected with a Stripe credit note</span></h2><div class="body">${es.length ? `<table>
       <tr><th>Week</th><th>Day</th><th>Project</th><th class="num">Hours</th><th class="num">Amount</th><th>Rule</th><th>Why</th><th>Invoice</th><th></th></tr>
-      ${es.map(e => `<tr><td>${e.week}</td><td>${e.days.map(dlabel).join(', ')}</td><td>${pname(e.project)}</td>
+      ${es.map(e => `<tr class="clk" onclick="ev(event,'${e.id}')"><td>${e.week}</td><td>${e.days.map(dlabel).join(', ')}</td><td>${pname(e.project)}</td>
         <td class="num">${e.hours.toFixed(1)}${(e.adjustments || []).length ? ` <span class="pill warn" title="${esc(e.adjustments.map(x => `${x.by}: ${x.reason}`).join(' | '))}">edited</span>` : ''}</td>
         <td class="num">${gbp(e.amount)}</td><td><span class="pill ok">${e.rule_id}</span>${e.decision_ref ? ` <span class="pill acc">${e.decision_ref}</span>` : ''} ${e.jev ? jevPill(e.jev.p) : ''}</td>
         <td class="why">${esc(e.reason)}${e.decision_note ? ' · <b>' + esc(e.decision_note) + '</b>' : ''}${(e.adjustments || []).map(x => `<br><span style="color:var(--warn)">${x.moved_to ? `moved ${x.moved_from} → ${x.moved_to}` : `${x.from_hours}h → ${x.to_hours}h`}${x.credit_note ? ` · credit note ${esc(x.credit_note.slice(0, 14))}` : ''} · ${esc(x.reason)}</span>`).join('')}</td>
         <td>${e.invoice_id ? '<span class="pill ok">invoiced</span>' : '<span class="pill">pending</span>'}</td>
         <td style="white-space:nowrap"><button class="small" onclick="editEntry('${e.id}')">Edit</button> <button class="small" onclick="removeEntry('${e.id}')">${e.invoice_id ? 'Credit' : 'Remove'}</button></td></tr>`).join('')}</table>` : '<div class="empty">No billables yet. Run a week from Billing.</div>'}</div></section>
     <section class="panel"><h2>Activity <span class="count">${feed.length}</span><span class="grow"></span><span class="seg" id="p-week"></span></h2><div class="body">${feedHTML(feed, false)}</div></section>`;
-  seg('p-week', [['W42', 'W42'], ['W43', 'W43']], pWeek, v => { pWeek = v; loadFeed(); });
+  seg('p-week', S.weeks.map(w => [w.id, w.id]), pWeek, v => { pWeek = v; loadFeed(); });
 }
 
 function editEntry(id) {
@@ -709,11 +777,13 @@ const refreshSoon = () => { clearTimeout(refreshTimer); refreshTimer = setTimeou
 function runWeek(week) {
   if (running) return;
   running = true; setButtons();
+  if (view !== 'billing') setView('billing');
+  window.scrollTo({top: 0, behavior: 'smooth'});
   $('log').innerHTML = ''; $('run-status').textContent = `running ${week}`;
   const es = new EventSource('/api/run/' + week);
   es.onmessage = m => {
     const ev = JSON.parse(m.data);
-    if (ev.type === 'start') step('', '▶', `<b>Run ${ev.week}</b>`, ev.model);
+    if (ev.type === 'start') step('', '▶', ev.rerun ? `<b>Re-run ${ev.week}</b>: only the ${ev.new_items} new item${ev.new_items === 1 ? '' : 's'}` : `<b>Run ${ev.week}</b>`, ev.model);
     else if (ev.type === 'text') step('say', '💬', esc(ev.text).replace(/\n/g, '<br>'));
     else if (ev.type === 'note') step('say', '…', esc(ev.text));
     else if (ev.type === 'tool_call') { const [ico, html] = describeCall(ev.name, ev.input); step(ev.name === 'recall_memory' ? 'mem' : '', ico, html, '', ev.id); }
@@ -724,7 +794,203 @@ function runWeek(week) {
   };
   es.onerror = () => { es.close(); running = false; setButtons(); $('run-status').textContent = 'disconnected'; load(); };
 }
-function setButtons() { ['run-W42', 'run-W43'].forEach(id => $(id).disabled = running); }
+function setButtons() { renderRunBtns(); }
+
+// ---- run buttons + guided demo steps (all derived from state)
+function renderRunBtns() {
+  if (!S) return;
+  $('run-btns').innerHTML = S.weeks.map(w => {
+    const done = w.items && !w.pending, partial = w.pending && w.pending < w.items;
+    const label = done ? `${w.id} ✓` : partial ? `Re-run ${w.id} · ${w.pending} new` : `Run ${w.id}`;
+    return `<button class="${done ? '' : 'primary'}" ${running || done ? 'disabled' : ''} onclick="runWeek('${w.id}')" title="${done ? 'Every activity has a disposition' : partial ? 'Handles only the undisposed items; nothing is billed twice' : ''}">${label}</button>`;
+  }).join('');
+}
+
+function demoSteps() {
+  const [w0, w1] = [S.weeks[0], S.weeks[1] || S.weeks[0]], L = S.ledger, last = S.weeks[S.weeks.length - 1];
+  const open = L.proposals.filter(p => p.status === 'open').length + L.holds.filter(h => h.status === 'open' && h.type !== 'po_cap' && !L.proposals.some(p => p.id === h.proposal_id && p.status === 'open')).length;
+  const started = w => w.pending < w.items;
+  let seen = false; try { seen = !!localStorage.getItem('cmpSeen'); } catch (e) {}
+  const d1 = started(w0), d2 = d1 && open === 0, d3 = started(w1) && w1.pending === 0 && w1 !== w0, d4 = d3 && seen;
+  const d5 = S.weeks.some(w => w.injected) && S.weeks.every(w => !w.pending);
+  return [
+    [1, `Run ${w0.id}`, d1, () => runWeek(w0.id)],
+    [2, open ? `Decide held items (${open})` : 'Decide held items', d2, () => { setView('billing'); $('inbox').scrollIntoView({behavior: 'smooth', block: 'center'}); }],
+    [3, `Run ${w1.id}`, d3, () => runWeek(w1.id)],
+    [4, 'Compare weeks', d4, () => setView('compare')],
+    [5, 'Drop in an email', d5, () => openInject(last.id)],
+  ];
+}
+
+function renderSteps() {
+  const st = demoSteps(), cur = st.findIndex(x => !x[2]);
+  $('steps').innerHTML = '<span class="why" style="flex:none;font-weight:600">Demo</span>' + st.map(([n, label, done], i) =>
+    `${i ? '<span class="sep"></span>' : ''}<button class="sb ${done ? 'done' : i === cur ? 'cur' : ''}" data-step="${n}"><span class="n">${done ? '✓' : n}</span>${esc(label)}</button>`).join('') +
+    '<span class="grow"></span><button class="small" onclick="openInject()">✉ Drop in an email</button><button class="small" onclick="resetAll()" title="Clear ledger, decisions, injected items and memory">↺ Reset demo</button>';
+  $('steps').querySelectorAll('.sb').forEach(b => b.onclick = () => st[+b.dataset.step - 1][3]());
+}
+
+// ---- evidence drawer
+function ev(e, id) { if (e.target.closest('a,button,select,input')) return; openEvidence(id); }
+const closeDrawer = () => { $('drawer-root').innerHTML = ''; };
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeDrawer(); });
+
+async function openEvidence(id) {
+  $('drawer-root').innerHTML = `<div class="drawer-bg" onclick="closeDrawer()"></div><aside class="drawer"><div class="drawer-h"><div class="why">Loading evidence for ${esc(id)}…</div></div></aside>`;
+  const r = await fetch('/api/evidence/' + encodeURIComponent(id));
+  if (!r.ok) { closeDrawer(); return toast('✗ No evidence found for ' + id); }
+  renderEvidence(await r.json());
+}
+
+const refPill = id => `<span class="pill acc" onclick="openEvidence('${esc(id)}')" title="Open evidence">${esc(id)}</span>`;
+
+function activityRow(a) {
+  const [ico] = KIND[a.kind] || ['•'], meta = [];
+  if (a.participants) meta.push(esc(a.participants.join(', ')));
+  if (a.channel) meta.push(esc(a.channel) + (a.messages ? ` · ${a.messages} messages` : ''));
+  if (a.path) meta.push(`<span class="mono">${esc(a.path)}</span>` + (a.edits ? ` · ${a.edits} edits` : ''));
+  if (a.thread_id) meta.push(`<span class="mono">${esc(a.thread_id)}</span>`);
+  const sig = Object.entries(a.signals || {}).map(([k, why]) => `<span class="ptag ${k === 'INTERNAL' ? 'dim' : ''}" title="${esc(why.join(' · '))}"><i></i>${pname(k)}</span>`).join(' ');
+  return `<div class="dact"><div class="tm mono why">${esc(a.ts.slice(5, 10))}<br>${esc(a.ts.slice(11, 16))}</div><div class="kico" style="width:24px;height:24px;border-radius:7px;display:grid;place-items:center;background:var(--soft)">${ico}</div>
+    <div style="min-width:0"><div style="font-weight:500">${a.injected ? '<span class="pill new">NEW</span> ' : ''}${esc(a.title)}</div><div class="why" style="overflow-wrap:anywhere">${meta.join(' · ')}</div>${sig ? `<div style="margin-top:4px">${sig}</div>` : ''}</div>
+    <div style="text-align:right;font-variant-numeric:tabular-nums">${a.minutes}m</div></div>`;
+}
+
+function renderEvidence(d) {
+  const sec = (title, body, extra = '') => body ? `<section class="dsec"><h4>${title}${extra}</h4><div>${body}</div></section>` : '';
+  const kv = rows => `<div class="kv">${rows.filter(Boolean).map(([k, v]) => `<div>${k}</div><div>${v}</div>`).join('')}</div>`;
+  const sm = d.summary || {}, conf = d.confidence, mem = d.memory, inv = d.invoice;
+  let summary = '';
+  if (d.kind === 'entry') summary = kv([['Billed', `<b>${sm.hours}h</b> × ${gbp(sm.rate)}/h = <b>${gbp(sm.amount)}</b>`], ['Who', `${avatar(d.consultant, 'sm')}${esc(S.firm.consultants[d.consultant].name)} · ${esc(sm.role)}`], ['Project', esc(pname(d.project))],
+    ['Days', sm.days.map(dlabel).join(', ')], ['Invoice line', `<span class="mono">${esc(sm.line)}</span>`], sm.flags?.length && ['Flags', sm.flags.map(x => `<span style="color:var(--warn)">${esc(x)}</span>`).join('<br>')]]);
+  else if (d.kind === 'hold') summary = kv([['Held', `<b>${sm.hours}h</b>${sm.amount ? ` · ${gbp(sm.amount)} not billed` : ''}`], ['Who', esc(S.firm.consultants[d.consultant]?.name || d.consultant)], d.project && ['Project', esc(pname(d.project))], ['Status', esc(d.status)], sm.released_entry && ['Released as', refPill(sm.released_entry)]]);
+  else if (d.kind === 'skipped') summary = kv([['Skipped', `<b>${sm.hours}h</b> not billed`], ['Who', esc(S.firm.consultants[d.consultant]?.name || d.consultant)]]);
+  else if (d.kind === 'invoice') summary = kv([['Amount', `<b>${gbp(inv.amount)}</b>${inv.credited ? ` <span style="color:var(--warn)">− ${gbp(inv.credited)} credited</span>` : ''}`], ['Period', esc(inv.period)], inv.memo && ['Memo', esc(inv.memo)]]);
+  let confHTML = '';
+  if (conf) {
+    const j = conf.jev, pr = j ? j.p : null, th = conf.threshold;
+    confHTML = pr != null ? `<div>${jevPill(pr, 'JEV')} <span class="why">${esc(conf.jev_label || 'probability this work is billable to the project')} · threshold <b>${th}</b> (R6) · ${d.kind === 'hold' ? 'needs a human' : pr >= th ? 'cleared' : 'below threshold'}</span></div>
+      <div class="jbar"><i class="${pr >= th ? '' : 'low'}" style="width:${Math.min(100, pr * 100)}%"></i><b style="left:${th * 100}%"></b></div>
+      <div class="why mono">${esc(j.model || '')} ${esc(j.id || '')}</div>${conf.agent != null ? `<div class="why">The agent's own confidence was ${Number(conf.agent).toFixed(2)}; code does not trust it, only JEV's score counts.</div>` : ''}`
+      : `<div class="why">JEV was not available${conf.used != null ? `; agent confidence ${Number(conf.used).toFixed(2)} vs threshold ${th}` : ''}.</div>`;
+  }
+  let memHTML = '';
+  if (mem) {
+    const dc = mem.decision;
+    memHTML = (dc ? `<div class="decbox"><b>${esc(dc.headline)}</b> ${refPill(dc.id)}${dc.note ? `<div class="why">${esc(dc.note)}</div>` : ''}${dc.memory_text ? `<div class="why" style="margin-top:4px">🧠 ${esc(dc.memory_text)}</div>` : ''}</div>` : '')
+      + (mem.cited ? `<div style="margin-top:${dc ? 8 : 0}px"><span class="why">Memory the agent cited:</span><br>${esc(mem.cited)}</div>` : '');
+  }
+  const adj = (d.adjustments || []).map(x => `<div style="margin-bottom:6px"><b>${esc(x.by)}</b> · ${esc(x.at.slice(0, 16).replace('T', ' '))}<br>${x.moved_to ? `moved ${esc(x.moved_from)} → ${esc(x.moved_to)}` : `${x.from_hours}h → ${x.to_hours}h (${gbp(x.amount)})`}${x.credit_note ? ` · credit note <span class="mono">${esc(x.credit_note)}</span>` : ''}<div class="why">${esc(x.reason)}</div></div>`).join('');
+  const prop = d.proposal ? `<div>${refPill(d.proposal.id)} <span class="pill">${esc(d.proposal.status)}</span> ${esc(d.proposal.role)} at ${gbp(d.proposal.rate)}/h from ${dlabel(d.proposal.from_date)}<div class="why">${esc(d.proposal.agent_evidence || '')}</div></div>` : '';
+  const stripe = inv ? kv([['Invoice', `<span class="mono">${esc(inv.number || inv.id)}</span> <span class="pill ${inv.status === 'paid' ? 'ok' : 'acc'}">${esc(inv.status)}</span>`],
+      ['Hosted', inv.hosted_invoice_url ? `<a href="${inv.hosted_invoice_url}" target="_blank">View invoice ↗</a>` : '<span class="why">none (dry run)</span>'],
+      ['Dashboard', inv.dashboard_url ? `<a href="${inv.dashboard_url}" target="_blank">Open in Stripe ↗</a>` : '<span class="why">none (dry run)</span>'],
+      d.invoice && d.kind !== 'invoice' && ['Invoice evidence', refPill(inv.id)]]) : '';
+  const meta = d.stripe_metadata ? `<details class="aud" style="margin-top:8px"><summary>Metadata sent on the Stripe invoice item</summary><pre class="mono" style="white-space:pre-wrap;overflow-wrap:anywhere;margin:6px 0 0">${esc(JSON.stringify(d.stripe_metadata, null, 1))}</pre></details>` : '';
+  const lines = d.lines ? `<table>${d.lines.map(l => `<tr class="clk" onclick="openEvidence('${l.id}')"><td class="mono">${l.id}</td><td class="why">${esc(l.line)}</td><td class="num">${gbp(l.amount)}</td><td>${l.jev != null ? jevPill(l.jev) : ''}</td></tr>`).join('')}</table>` : '';
+  const aud = (d.audit || []).length ? `<details class="aud"><summary>${d.audit.length} audit events</summary>${d.audit.map(r => { const {ts, event, ...rest} = r; return `<div class="mono" style="margin-top:6px;overflow-wrap:anywhere"><span class="pill">${esc(event)}</span> ${esc(ts.slice(11, 19))} ${esc(JSON.stringify(rest)).slice(0, 400)}</div>`; }).join('')}</details>` : '';
+  const tone = {billed: 'ok', non_billable: '', pending: 'warn', open: 'warn'}[d.status] ?? 'acc';
+  $('drawer-root').innerHTML = `<div class="drawer-bg" onclick="closeDrawer()"></div><aside class="drawer">
+    <div class="drawer-h">${d.consultant && S.firm.consultants[d.consultant] ? avatar(d.consultant, '', 'width:36px;height:36px;font-size:13px') : ''}<div style="flex:1;min-width:0"><div class="why mono">${esc(d.id)} · ${esc(d.kind)}</div><h3>${esc(d.title)}</h3></div>
+    <span class="pill ${tone}">${esc(d.status)}</span><button class="small" onclick="closeDrawer()">✕</button></div>
+    <div class="drawer-body">
+      ${sec('Summary', summary)}
+      ${sec('Underlying activity', (d.activities || []).map(activityRow).join(''), ` <span class="count pill">${(d.activities || []).length}</span>`)}
+      ${sec('Lines on this invoice', lines)}
+      ${d.rule ? sec('Rule applied', `<span class="pill ${d.kind === 'hold' ? 'warn' : 'ok'}">${esc(d.rule.id)}</span> ${esc(d.rule.text)}`) : ''}
+      ${sec('Agent’s reason', d.reason ? esc(d.reason) : '')}
+      ${sec('Confidence (JEV)', confHTML)}
+      ${sec('Memory &amp; decisions', memHTML)}
+      ${sec('Staffing proposal', prop)}
+      ${sec('Consultant edits &amp; write-downs', adj)}
+      ${sec('Stripe', stripe + meta)}
+      ${sec('Audit trail', aud)}
+    </div></aside>`;
+}
+
+// ---- week comparison ("memory moment")
+async function loadCompare() {
+  const ws = S.weeks.map(w => w.id), bi = Math.max(1, ws.indexOf(cmpB));
+  if (ws.length < 2) { $('compare').innerHTML = '<div class="empty">Needs two weeks of data.</div>'; return; }
+  seg('c-week', ws.slice(1).map(w => [w, `${ws[ws.indexOf(w) - 1]} → ${w}`]), ws[bi], v => { cmpB = v; loadCompare(); });
+  const a = ws[bi - 1], b = ws[bi];
+  const c = await (await fetch(`/api/compare?a=${a}&b=${b}`)).json();
+  if (view !== 'compare') return;
+  const t = c.totals, KINDS = {auto_billed: ['Billed automatically', 'ok'], skipped_silently: ['Skipped without asking', ''], po_cap: ['PO cap guardrail', 'warn'], memory: ['Recalled context', 'acc']};
+  const refs = ids => ids.length ? `<div class="refs">${ids.map(refPill).join('')}</div>` : '';
+  $('compare').innerHTML = `<div class="cmp-sum">
+      <div class="stat recover"><div class="k">Billed with no question asked</div><div class="v">${gbp(t.auto_amount)}</div><div class="why">${t.auto_hours}h in ${c.b}</div></div>
+      <div class="stat"><div class="k">Hours skipped, not escalated</div><div class="v">${t.skipped_hours}h</div></div>
+      <div class="stat"><div class="k">Questions avoided</div><div class="v">${t.questions_avoided}</div></div>
+      <div class="stat"><div class="k">Decisions at work</div><div class="v">${t.decisions}</div></div></div>` +
+    (c.items.map(i => `<section class="cmp"><div class="cmp-h"><span class="pill ${KINDS[i.kind][1]}">${KINDS[i.kind][0]}</span><b>${esc(i.title)}</b><span class="grow"></span>${i.hours ? `<span class="why">${i.hours}h${i.amount ? ' · ' + gbp(i.amount) : ''}</span>` : ''}</div>
+      <div class="cmp-cols"><div class="before"><div class="lbl">${esc(i.before.label)} · before</div>${esc(i.before.text)}${refs(i.before.refs)}</div><div class="arrow">→</div>
+      <div class="after"><div class="lbl">${esc(i.after.label)} · now</div>${esc(i.after.text)}${refs(i.after.refs)}</div></div>
+      ${i.decision || i.memory ? `<div class="decbox">${i.decision ? `<b>${esc(i.decision.headline)}</b> ${refPill(i.decision.id)}${i.decision.memory_text ? `<div class="why" style="margin-top:4px">🧠 ${esc(i.decision.memory_text)}</div>` : ''}` : ''}${i.memory ? `<div class="why" style="margin-top:4px">Agent cited: ${esc(i.memory).slice(0, 300)}</div>` : ''}</div>` : ''}</section>`).join('')
+      || `<div class="empty">Nothing in ${c.b} was handled differently yet. Run ${c.a}, decide the held items, then run ${c.b}.</div>`);
+}
+
+// ---- drop in a new activity item (live demo)
+let injPresets = null;
+async function openInject(week) {
+  week ||= (S.weeks.find(w => w.pending < w.items && w.id !== S.weeks[0].id) || S.weeks[S.weeks.length - 1]).id;
+  const bg = document.createElement('div'); bg.className = 'modal-bg';
+  bg.innerHTML = '<div class="modal wide"><div class="why">Loading…</div></div>';
+  document.body.appendChild(bg);
+  bg.onclick = e => { if (e.target === bg) bg.remove(); };
+  const draw = async wk => {
+    injPresets = await (await fetch('/api/inject/presets?week=' + wk)).json();
+    const P = injPresets, cons = Object.entries(P.consultants);
+    bg.firstChild.innerHTML = `<h3>✉ Drop in new activity</h3>
+      <div class="why">Adds an item to the week's feed (a live overlay, never written to the data files). Then run the week again: the agent handles only the new item.</div>
+      <label>Week</label><select id="i-week">${P.weeks.map(w => `<option ${w === P.week ? 'selected' : ''}>${w}</option>`).join('')}</select>
+      <label>Preset</label><div class="presets">${P.presets.map((x, n) => `<button data-n="${n}"><b>${esc(x.label)}</b><div class="why">${esc(x.hint)}</div></button>`).join('')}</div>
+      <div class="fgrid">
+        <div><label>Consultant</label><select id="i-cons">${cons.map(([k, n]) => `<option value="${k}">${esc(n)}</option>`).join('')}</select></div>
+        <div><label>Kind</label><select id="i-kind"><option value="email">Email</option><option value="call">Call</option><option value="teams">Teams</option><option value="doc_edit">Doc edit</option></select></div>
+        <div><label>Day</label><input id="i-day" type="date" value="${P.day}"></div>
+        <div><label>Time</label><input id="i-time" type="time" value="${P.time}"></div>
+        <div class="full"><label>Title</label><input id="i-title"></div>
+        <div class="full" data-k="email call"><label>Participants (comma separated)</label><input id="i-parts"></div>
+        <div data-k="email"><label>Thread id</label><input id="i-thread"></div>
+        <div data-k="teams"><label>Channel</label><input id="i-chan" placeholder="#channel"></div>
+        <div data-k="teams"><label>Messages</label><input id="i-msgs" type="number" min="1"></div>
+        <div class="full" data-k="doc_edit"><label>File path</label><input id="i-path"></div>
+        <div data-k="call doc_edit"><label>Minutes</label><input id="i-mins" type="number" min="1"></div>
+        <div data-k="doc_edit"><label>Edits</label><input id="i-edits" type="number" min="1"></div>
+      </div>
+      <div style="display:flex;gap:8px;margin-top:16px;justify-content:flex-end;flex-wrap:wrap"><button onclick="this.closest('.modal-bg').remove()">Cancel</button>
+        <button id="i-add">Drop in</button><button class="primary" id="i-run">Drop in &amp; run agent</button></div>`;
+    const sync = () => bg.querySelectorAll('[data-k]').forEach(el => el.hidden = !el.dataset.k.split(' ').includes($('i-kind').value));
+    const fill = it => {
+      $('i-cons').value = it.consultant; $('i-kind').value = it.kind; $('i-title').value = it.title || ''; $('i-parts').value = it.participants || '';
+      $('i-thread').value = it.thread_id || ''; $('i-chan').value = it.channel || ''; $('i-msgs').value = it.messages || ''; $('i-path').value = it.path || '';
+      $('i-mins').value = it.minutes || ''; $('i-edits').value = it.edits || ''; sync();
+    };
+    $('i-kind').onchange = sync; $('i-week').onchange = () => draw($('i-week').value);
+    bg.querySelectorAll('.presets button').forEach(b => b.onclick = () => {
+      bg.querySelectorAll('.presets button').forEach(x => x.classList.toggle('active', x === b)); fill(P.presets[+b.dataset.n].item);
+    });
+    if (P.presets[0]) bg.querySelector('.presets button').click(); else sync();
+    const submit = async run => {
+      const body = {week: $('i-week').value, consultant: $('i-cons').value, kind: $('i-kind').value, day: $('i-day').value, time: $('i-time').value, title: $('i-title').value};
+      const vis = id => !$(id).closest('[data-k]')?.hidden && $(id).value;
+      if (vis('i-parts')) body.participants = $('i-parts').value; if (vis('i-thread')) body.thread_id = $('i-thread').value;
+      if (vis('i-chan')) body.channel = $('i-chan').value; if (vis('i-msgs')) body.messages = $('i-msgs').value;
+      if (vis('i-path')) body.path = $('i-path').value; if (vis('i-mins')) body.minutes = $('i-mins').value; if (vis('i-edits')) body.edits = $('i-edits').value;
+      const r = await fetch('/api/inject', {method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify(body)});
+      const j = await r.json();
+      if (!r.ok) return toast('✗ ' + (j.detail || 'could not add'));
+      bg.remove(); toast(`✓ ${j.id} dropped into ${body.week}: not processed yet`);
+      fWeek = body.week; fCons = 'all'; fKind = 'all'; fDisp = 'all';
+      await load();
+      if (run) runWeek(body.week); else setView('activity');
+    };
+    $('i-add').onclick = () => submit(false); $('i-run').onclick = () => submit(true);
+  };
+  draw(week);
+}
+
 
 async function decide(target, action) {
   document.querySelectorAll('.card button').forEach(b => b.disabled = true);
@@ -736,8 +1002,13 @@ async function decide(target, action) {
 }
 async function markPaid(id) { await fetch(`/api/invoices/${id}/paid`, {method: 'POST'}); load(); }
 async function resetAll() {
-  if (!confirm('Reset ledger, config and decisions? (Stripe test invoices stay in Stripe)')) return;
-  await fetch('/api/reset', {method: 'POST'}); $('log').innerHTML = ''; load();
+  if (!confirm('Reset ledger, config, decisions and injected items? (Stripe test invoices stay in Stripe)')) return;
+  const r = await fetch('/api/reset', {method: 'POST'});
+  if (!r.ok) return toast('✗ ' + ((await r.json()).detail || 'reset failed'));
+  try { localStorage.removeItem('cmpSeen'); } catch (e) {}
+  closeDrawer(); profile = null; for (const k in FEED) delete FEED[k];
+  $('log').innerHTML = '<div class="empty">Press <b>Run</b> to let the agent work through the week.</div>'; $('run-status').textContent = 'idle';
+  await load(); setView('billing');
 }
 load();
 </script>

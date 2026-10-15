@@ -8,7 +8,7 @@ from datetime import date, timedelta
 from . import billing, memory, policy, store
 from .tools import WeekContext, _add_entry
 
-APPROVER = "Priya Shah (Engagement Manager)"
+APPROVER = "Hannah Cole (Engagement Manager)"
 
 
 def _date_label(d: date) -> str:
@@ -101,6 +101,7 @@ async def record_decision(target_id: str, action: str, note: str = "") -> dict:
                     f"{firm['projects'][proj_key]['name'] if proj_key else 'client work'} is internal and not billable "
                     f"(decided by {APPROVER}). Skip it in future weeks without asking.")
             result["threads_excluded"] = threads
+            decision["threads"] = threads
         elif action == "approve":
             # bill the held item as-is (manager vouches for it)
             ctx = WeekContext(hold["week"])
@@ -121,6 +122,8 @@ async def record_decision(target_id: str, action: str, note: str = "") -> dict:
             hold["status"] = "ignored"
             text = None
 
+    if text:
+        decision["memory_text"] = text
     store.save_ledger(ledger)
     store.audit("decision", decision=decision["id"], target=target_id, action=action, by=APPROVER, result=result)
     if text:
@@ -151,10 +154,11 @@ async def assign(consultant: str, project: str, role: str, start: str, hours_per
                                                      "end": "2026-12-31", "decision": decision["id"]})
     store.save_firm(firm)
     ledger["decisions"].append(decision)
-    store.save_ledger(ledger)
     cons, proj = firm["consultants"][consultant], firm["projects"][project]
     text = (f"Decision {date.today().isoformat()}: {cons['name']} assigned to {proj['name']} ({project}) as {role} at "
             f"£{rate_card[role]}/h, {hours_per_week}h/week, from {start} (set by {APPROVER} on the project board).")
+    decision["memory_text"] = text
+    store.save_ledger(ledger)
     store.audit("decision", decision=decision["id"], action="assign", consultant=consultant, project=project,
                 role=role, start=start, by=APPROVER)
     row = await memory.remember(text, kind="decision")
@@ -179,10 +183,11 @@ async def unassign(consultant: str, project: str) -> dict:
             a["end"] = last_day.isoformat()
     store.save_firm(firm)
     ledger["decisions"].append(decision)
-    store.save_ledger(ledger)
     cons, proj = firm["consultants"][consultant], firm["projects"][project]
     text = (f"Decision {today.isoformat()}: {cons['name']} rolled off {proj['name']} ({project}) as of "
             f"{today.isoformat()} (set by {APPROVER} on the project board). Later work on it is unassigned.")
+    decision["memory_text"] = text
+    store.save_ledger(ledger)
     store.audit("decision", decision=decision["id"], action="unassign", consultant=consultant, project=project,
                 by=APPROVER)
     row = await memory.remember(text, kind="decision")

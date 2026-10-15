@@ -19,7 +19,7 @@ from . import store
 
 load_dotenv(Path.home() / ".cognee" / ".env")
 
-CONTEXT_DATASET = "sixminutes_context"
+CONTEXT_DATASET = "sixminutes_context_v2"  # v2: 8-person firm (Hannah Cole, 6 projects)
 MIRROR = store.STATE / "memory.jsonl"
 SESSION = store.STATE / "memory_session.json"
 
@@ -102,8 +102,11 @@ async def recall(question: str) -> dict:
     if enabled():
         try:
             cognee = await _serve()
-            res = await asyncio.wait_for(
-                cognee.recall(query_text=question, datasets=[CONTEXT_DATASET, decisions_dataset()]), timeout=45)
+            # the decisions dataset only exists in Cognee once a decision has been remembered into it
+            datasets = [CONTEXT_DATASET]
+            if any(r["dataset"] == decisions_dataset() and r["backend"] == "cognee" for r in mirror()):
+                datasets.append(decisions_dataset())
+            res = await asyncio.wait_for(cognee.recall(query_text=question, datasets=datasets), timeout=45)
             out["answers"] = [r.get("text") if isinstance(r, dict) else str(r) for r in res][:4]
             out["answers"] = [a for a in out["answers"] if a]
             out["backend"] = "cognee"

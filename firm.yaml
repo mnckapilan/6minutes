@@ -18,10 +18,14 @@ firm:
     staffing_min_days: 2
 
 consultants:
-  priya: { name: Priya Shah, email: priya@northbeam.co, title: Manager }
-  sam:   { name: Sam Lee,    email: sam@northbeam.co,   title: Analyst }
-  jordan: { name: Jordan Blake, email: jordan@northbeam.co, title: Partner }
-  alex:  { name: Alex Morgan, email: alex@northbeam.co,  title: Consultant }
+  hannah: { name: Hannah Cole, email: hannah@northbeam.co, title: Manager, avatar: https://randomuser.me/api/portraits/women/44.jpg }
+  sam:   { name: Sam Lee,    email: sam@northbeam.co,   title: Analyst, avatar: https://randomuser.me/api/portraits/men/32.jpg }
+  jordan: { name: Jordan Blake, email: jordan@northbeam.co, title: Partner, avatar: https://randomuser.me/api/portraits/men/52.jpg }
+  maya:  { name: Maya Okafor, email: maya@northbeam.co, title: Manager, avatar: https://randomuser.me/api/portraits/women/68.jpg }
+  daniel: { name: Daniel Reyes, email: daniel@northbeam.co, title: Consultant, avatar: https://randomuser.me/api/portraits/men/75.jpg }
+  chloe: { name: Chloe Whitfield, email: chloe@northbeam.co, title: Consultant, avatar: https://randomuser.me/api/portraits/women/65.jpg }
+  tariq: { name: Tariq Hassan, email: tariq@northbeam.co, title: Analyst, avatar: https://randomuser.me/api/portraits/men/86.jpg }
+  elena: { name: Elena Rossi, email: elena@northbeam.co, title: Analyst, avatar: https://randomuser.me/api/portraits/women/17.jpg }
 
 clients:
   acme:
@@ -34,6 +38,18 @@ clients:
     domains: [globex.com]
     policy:
       confidence_threshold: 0.75   # client-level override
+  brightwater:
+    name: Brightwater Utilities
+    billing_email: payables@brightwater.example
+    domains: [brightwater.com, bwenergy.com]
+  kestrel:
+    name: Kestrel Pharma
+    billing_email: ap@kestrelpharma.example
+    domains: [kestrelpharma.com]
+  lumen:
+    name: Lumen Retail
+    billing_email: accounts@lumenretail.example
+    domains: [lumenretail.com]
 
 projects:
   ACME-Q3:
@@ -50,7 +66,7 @@ projects:
       files: [Acme_Model_v3.xlsx, Acme_Audit_Findings.docx]
     non_billable_threads: []     # R3: filled by manager decisions
     assignments:
-      - { consultant: priya, role: Manager, hours_per_week: 25, start: 2026-09-01, end: 2026-12-31 }
+      - { consultant: hannah, role: Manager, hours_per_week: 25, start: 2026-09-01, end: 2026-12-31 }
       - { consultant: jordan, role: Partner, hours_per_week: 2, start: 2026-09-01, end: 2026-12-31 }
 
   GLX-STRAT:
@@ -68,6 +84,78 @@ projects:
     non_billable_threads: []
     assignments:
       - { consultant: sam, role: Analyst, hours_per_week: 30, start: 2026-09-15, end: 2026-12-31 }
+      - { consultant: maya, role: Manager, hours_per_week: 8, start: 2026-09-15, end: 2026-12-31 }
+
+  BW-REG:
+    name: Brightwater Regulatory Submission
+    client: brightwater
+    code: BWRS
+    po_number: PO-BW-3310
+    policy:
+      po_cap_gbp: 28000
+    match:
+      domains: [brightwater.com]
+      channels: ["#bw-regulatory"]
+      folders: [/Clients/Brightwater/Regulatory]
+      files: [Brightwater_Submission_Draft.docx, Brightwater_Evidence_Tracker.xlsx]
+    non_billable_threads: []
+    assignments:
+      - { consultant: maya, role: Manager, hours_per_week: 15, start: 2026-09-08, end: 2026-12-31 }
+      - { consultant: daniel, role: Consultant, hours_per_week: 25, start: 2026-09-08, end: 2026-12-31 }
+      - { consultant: tariq, role: Analyst, hours_per_week: 30, start: 2026-09-08, end: 2026-12-31 }
+
+  BW-GRID:
+    name: Brightwater Grid Resilience Study
+    client: brightwater
+    code: BWGR
+    po_number: PO-BW-3355
+    policy:
+      po_cap_gbp: 2800           # R5: tight cap, nearly used up by W43
+    match:
+      domains: [bwenergy.com]
+      channels: ["#bw-grid"]
+      folders: [/Clients/Brightwater/Grid]
+      files: [Grid_Resilience_Model.xlsx, Grid_Steerco_Pack.pptx]
+    non_billable_threads: []
+    assignments:
+      - { consultant: jordan, role: Partner, hours_per_week: 3, start: 2026-09-22, end: 2026-12-31 }
+      - { consultant: daniel, role: Consultant, hours_per_week: 10, start: 2026-09-22, end: 2026-12-31 }
+
+  KES-TRIAL:
+    name: Kestrel Trial Supply Optimisation
+    client: kestrel
+    code: KTSO
+    po_number: PO-KP-7781
+    policy:
+      po_cap_gbp: 25000
+      confidence_threshold: 0.8   # project-level override (regulated client, stricter)
+    match:
+      domains: [kestrelpharma.com]
+      channels: ["#kestrel-trial"]
+      folders: [/Clients/Kestrel/TrialSupply]
+      files: [Kestrel_Supply_Forecast.xlsx, Kestrel_Site_Playbook.docx]
+    non_billable_threads: []
+    assignments:
+      - { consultant: chloe, role: Consultant, hours_per_week: 30, start: 2026-09-15, end: 2026-12-31 }
+      - { consultant: elena, role: Analyst, hours_per_week: 30, start: 2026-09-15, end: 2026-12-31 }
+      - { consultant: jordan, role: Partner, hours_per_week: 2, start: 2026-09-15, end: 2026-12-31 }
+
+  LUM-CX:
+    name: Lumen Customer Experience Review
+    client: lumen
+    code: LMCX
+    po_number: PO-LR-1204
+    policy:
+      po_cap_gbp: 15000
+    match:
+      domains: [lumenretail.com]
+      channels: ["#lumen-cx"]
+      folders: [/Clients/Lumen/CX]
+      files: [Lumen_CX_Survey_Analysis.xlsx, Lumen_Journey_Map.pptx]
+    non_billable_threads: []
+    assignments:
+      - { consultant: chloe, role: Consultant, hours_per_week: 8, start: 2026-10-05, end: 2026-12-31 }
+      - { consultant: tariq, role: Analyst, hours_per_week: 12, start: 2026-10-05, end: 2026-12-31 }
 
   INTERNAL:
     name: Internal
@@ -81,5 +169,11 @@ projects:
       files: []
     non_billable_threads: []
     assignments:
-      - { consultant: priya, role: Manager, hours_per_week: 5, start: 2026-01-01, end: 2026-12-31 }
+      - { consultant: hannah, role: Manager, hours_per_week: 5, start: 2026-01-01, end: 2026-12-31 }
       - { consultant: sam, role: Analyst, hours_per_week: 5, start: 2026-01-01, end: 2026-12-31 }
+      - { consultant: maya, role: Manager, hours_per_week: 5, start: 2026-01-01, end: 2026-12-31 }
+      - { consultant: daniel, role: Consultant, hours_per_week: 3, start: 2026-01-01, end: 2026-12-31 }
+      - { consultant: chloe, role: Consultant, hours_per_week: 3, start: 2026-01-01, end: 2026-12-31 }
+      - { consultant: tariq, role: Analyst, hours_per_week: 5, start: 2026-01-01, end: 2026-12-31 }
+      - { consultant: elena, role: Analyst, hours_per_week: 5, start: 2026-01-01, end: 2026-12-31 }
+      - { consultant: jordan, role: Partner, hours_per_week: 3, start: 2026-01-01, end: 2026-12-31 }

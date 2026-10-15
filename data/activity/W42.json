@@ -1,20 +1,301 @@
 [
  {
+  "id": "W42-c-001",
+  "consultant": "chloe",
+  "ts": "2026-10-12T09:00:00",
+  "kind": "doc_edit",
+  "title": "Edited Kestrel_Supply_Forecast.xlsx",
+  "minutes": 180,
+  "path": "/Clients/Kestrel/TrialSupply/Kestrel_Supply_Forecast.xlsx",
+  "edits": 14
+ },
+ {
+  "id": "W42-c-002",
+  "consultant": "chloe",
+  "ts": "2026-10-13T10:00:00",
+  "kind": "call",
+  "title": "Kestrel Trial Supply: depot constraints workshop",
+  "minutes": 90,
+  "participants": [
+   "chloe@northbeam.co",
+   "elena@northbeam.co",
+   "l.fontaine@kestrelpharma.com",
+   "supplychain@kestrelpharma.com"
+  ]
+ },
+ {
+  "id": "W42-c-003",
+  "consultant": "chloe",
+  "ts": "2026-10-13T14:00:00",
+  "kind": "doc_edit",
+  "title": "Edited Kestrel_Site_Playbook.docx",
+  "minutes": 120,
+  "path": "/Clients/Kestrel/TrialSupply/Kestrel_Site_Playbook.docx",
+  "edits": 8
+ },
+ {
+  "id": "W42-c-004",
+  "consultant": "chloe",
+  "ts": "2026-10-14T11:00:00",
+  "kind": "call",
+  "title": "Lumen CX: journey mapping session",
+  "minutes": 60,
+  "participants": [
+   "chloe@northbeam.co",
+   "tariq@northbeam.co",
+   "p.ibarra@lumenretail.com",
+   "cx@lumenretail.com"
+  ]
+ },
+ {
+  "id": "W42-c-005",
+  "consultant": "chloe",
+  "ts": "2026-10-14T16:00:00",
+  "kind": "email",
+  "title": "RE: [KTSO] Depot capacity assumptions",
+  "participants": [
+   "chloe@northbeam.co",
+   "l.fontaine@kestrelpharma.com"
+  ],
+  "thread_id": "thr-kes-depot"
+ },
+ {
+  "id": "W42-c-006",
+  "consultant": "chloe",
+  "ts": "2026-10-15T09:30:00",
+  "kind": "doc_edit",
+  "title": "Edited Kestrel_Supply_Forecast.xlsx",
+  "minutes": 150,
+  "path": "/Clients/Kestrel/TrialSupply/Kestrel_Supply_Forecast.xlsx",
+  "edits": 10
+ },
+ {
+  "id": "W42-c-007",
+  "consultant": "chloe",
+  "ts": "2026-10-15T15:00:00",
+  "kind": "call",
+  "title": "Kestrel Trial Supply: forecast review with supply chain",
+  "minutes": 45,
+  "participants": [
+   "chloe@northbeam.co",
+   "l.fontaine@kestrelpharma.com",
+   "supplychain@kestrelpharma.com"
+  ]
+ },
+ {
+  "id": "W42-c-008",
+  "consultant": "chloe",
+  "ts": "2026-10-16T11:00:00",
+  "kind": "teams",
+  "title": "#kestrel-trial: site list updates",
+  "channel": "#kestrel-trial",
+  "messages": 6
+ },
+ {
+  "id": "W42-c-009",
+  "consultant": "chloe",
+  "ts": "2026-10-16T14:00:00",
+  "kind": "call",
+  "title": "Consultant community of practice",
+  "minutes": 45,
+  "participants": [
+   "chloe@northbeam.co",
+   "daniel@northbeam.co",
+   "tom.ward@northbeam.co"
+  ]
+ },
+ {
+  "id": "W42-d-001",
+  "consultant": "daniel",
+  "ts": "2026-10-12T09:30:00",
+  "kind": "doc_edit",
+  "title": "Edited Brightwater_Submission_Draft.docx",
+  "minutes": 180,
+  "path": "/Clients/Brightwater/Regulatory/Brightwater_Submission_Draft.docx",
+  "edits": 12
+ },
+ {
+  "id": "W42-d-002",
+  "consultant": "daniel",
+  "ts": "2026-10-13T10:00:00",
+  "kind": "call",
+  "title": "Brightwater Regulatory: evidence workshop with compliance",
+  "minutes": 90,
+  "participants": [
+   "daniel@northbeam.co",
+   "maya@northbeam.co",
+   "a.nolan@brightwater.com",
+   "h.zhou@brightwater.com"
+  ]
+ },
+ {
+  "id": "W42-d-003",
+  "consultant": "daniel",
+  "ts": "2026-10-14T09:30:00",
+  "kind": "doc_edit",
+  "title": "Edited Grid_Resilience_Model.xlsx",
+  "minutes": 150,
+  "path": "/Clients/Brightwater/Grid/Grid_Resilience_Model.xlsx",
+  "edits": 9
+ },
+ {
+  "id": "W42-d-004",
+  "consultant": "daniel",
+  "ts": "2026-10-14T15:00:00",
+  "kind": "teams",
+  "title": "#bw-regulatory: evidence tracker questions",
+  "channel": "#bw-regulatory",
+  "messages": 7
+ },
+ {
+  "id": "W42-d-005",
+  "consultant": "daniel",
+  "ts": "2026-10-15T14:00:00",
+  "kind": "call",
+  "title": "Brightwater Grid: outage data review",
+  "minutes": 60,
+  "participants": [
+   "daniel@northbeam.co",
+   "t.okoye@bwenergy.com",
+   "grid.ops@bwenergy.com"
+  ]
+ },
+ {
+  "id": "W42-d-006",
+  "consultant": "daniel",
+  "ts": "2026-10-15T16:30:00",
+  "kind": "email",
+  "title": "RE: [BWGR] Substation outage dataset",
+  "participants": [
+   "daniel@northbeam.co",
+   "t.okoye@bwenergy.com"
+  ],
+  "thread_id": "thr-bwgrid-outage"
+ },
+ {
+  "id": "W42-d-007",
+  "consultant": "daniel",
+  "ts": "2026-10-16T10:00:00",
+  "kind": "doc_edit",
+  "title": "Updated Brightwater_Evidence_Tracker.xlsx",
+  "minutes": 120,
+  "path": "/Clients/Brightwater/Regulatory/Brightwater_Evidence_Tracker.xlsx",
+  "edits": 6
+ },
+ {
+  "id": "W42-d-008",
+  "consultant": "daniel",
+  "ts": "2026-10-16T15:00:00",
+  "kind": "call",
+  "title": "Consultant career development catch-up",
+  "minutes": 30,
+  "participants": [
+   "daniel@northbeam.co",
+   "tom.ward@northbeam.co"
+  ]
+ },
+ {
+  "id": "W42-e-001",
+  "consultant": "elena",
+  "ts": "2026-10-12T09:30:00",
+  "kind": "doc_edit",
+  "title": "Edited Kestrel_Supply_Forecast.xlsx",
+  "minutes": 210,
+  "path": "/Clients/Kestrel/TrialSupply/Kestrel_Supply_Forecast.xlsx",
+  "edits": 17
+ },
+ {
+  "id": "W42-e-002",
+  "consultant": "elena",
+  "ts": "2026-10-13T10:00:00",
+  "kind": "call",
+  "title": "Kestrel Trial Supply: depot constraints workshop",
+  "minutes": 90,
+  "participants": [
+   "elena@northbeam.co",
+   "chloe@northbeam.co",
+   "l.fontaine@kestrelpharma.com",
+   "supplychain@kestrelpharma.com"
+  ]
+ },
+ {
+  "id": "W42-e-003",
+  "consultant": "elena",
+  "ts": "2026-10-14T09:30:00",
+  "kind": "doc_edit",
+  "title": "Edited Kestrel_Site_Playbook.docx",
+  "minutes": 180,
+  "path": "/Clients/Kestrel/TrialSupply/Kestrel_Site_Playbook.docx",
+  "edits": 9
+ },
+ {
+  "id": "W42-e-004",
+  "consultant": "elena",
+  "ts": "2026-10-14T14:00:00",
+  "kind": "call",
+  "title": "Analyst training: regulatory reporting basics",
+  "minutes": 60,
+  "participants": [
+   "elena@northbeam.co",
+   "training@northbeam.co"
+  ]
+ },
+ {
+  "id": "W42-e-005",
+  "consultant": "elena",
+  "ts": "2026-10-15T10:00:00",
+  "kind": "teams",
+  "title": "#kestrel-trial: data requests",
+  "channel": "#kestrel-trial",
+  "messages": 9
+ },
+ {
+  "id": "W42-e-006",
+  "consultant": "elena",
+  "ts": "2026-10-15T14:30:00",
+  "kind": "doc_edit",
+  "title": "Edited Kestrel_Supply_Forecast.xlsx",
+  "minutes": 120,
+  "path": "/Clients/Kestrel/TrialSupply/Kestrel_Supply_Forecast.xlsx",
+  "edits": 7
+ },
+ {
+  "id": "W42-e-007",
+  "consultant": "elena",
+  "ts": "2026-10-16T10:30:00",
+  "kind": "email",
+  "title": "RE: [KTSO] Site list corrections",
+  "participants": [
+   "elena@northbeam.co",
+   "supplychain@kestrelpharma.com"
+  ],
+  "thread_id": "thr-kes-sites"
+ },
+ {
+  "id": "W42-e-008",
+  "consultant": "elena",
+  "ts": "2026-10-16T16:00:00",
+  "kind": "teams",
+  "title": "#general: Friday social planning",
+  "channel": "#general",
+  "messages": 4
+ },
+ {
   "id": "W42-p-001",
-  "consultant": "priya",
+  "consultant": "hannah",
   "ts": "2026-10-12T09:00:00",
   "kind": "call",
   "title": "Acme Q3 Audit: daily stand-up with Acme finance",
   "minutes": 30,
   "participants": [
-   "priya@northbeam.co",
+   "hannah@northbeam.co",
    "jane.doe@acme.com",
    "raj.patel@acme.com"
   ]
  },
  {
   "id": "W42-p-002",
-  "consultant": "priya",
+  "consultant": "hannah",
   "ts": "2026-10-12T10:00:00",
   "kind": "doc_edit",
   "title": "Edited Acme_Audit_Findings.docx",
@@ -24,7 +305,7 @@
  },
  {
   "id": "W42-p-026",
-  "consultant": "priya",
+  "consultant": "hannah",
   "ts": "2026-10-12T12:30:00",
   "kind": "teams",
   "title": "#general: Friday social planning",
@@ -33,7 +314,7 @@
  },
  {
   "id": "W42-p-003",
-  "consultant": "priya",
+  "consultant": "hannah",
   "ts": "2026-10-12T14:00:00",
   "kind": "doc_edit",
   "title": "Reviewed Acme_Model_v3.xlsx",
@@ -43,32 +324,32 @@
  },
  {
   "id": "W42-p-016",
-  "consultant": "priya",
+  "consultant": "hannah",
   "ts": "2026-10-12T16:00:00",
   "kind": "email",
   "title": "RE: [ACQ3] Revenue recognition sample selection",
   "participants": [
-   "priya@northbeam.co",
+   "hannah@northbeam.co",
    "cfo@acme.com"
   ],
   "thread_id": "thr-acme-revrec"
  },
  {
   "id": "W42-p-004",
-  "consultant": "priya",
+  "consultant": "hannah",
   "ts": "2026-10-13T09:00:00",
   "kind": "call",
   "title": "Acme Q3 Audit: daily stand-up with Acme finance",
   "minutes": 30,
   "participants": [
-   "priya@northbeam.co",
+   "hannah@northbeam.co",
    "jane.doe@acme.com",
    "raj.patel@acme.com"
   ]
  },
  {
   "id": "W42-p-005",
-  "consultant": "priya",
+  "consultant": "hannah",
   "ts": "2026-10-13T10:00:00",
   "kind": "doc_edit",
   "title": "Edited Acme_Audit_Findings.docx",
@@ -78,7 +359,7 @@
  },
  {
   "id": "W42-p-006",
-  "consultant": "priya",
+  "consultant": "hannah",
   "ts": "2026-10-13T14:00:00",
   "kind": "doc_edit",
   "title": "Reviewed Acme_Model_v3.xlsx",
@@ -88,13 +369,13 @@
  },
  {
   "id": "W42-p-017",
-  "consultant": "priya",
+  "consultant": "hannah",
   "ts": "2026-10-13T16:30:00",
   "kind": "call",
   "title": "Acme Q3 Audit: controls walkthrough",
   "minutes": 90,
   "participants": [
-   "priya@northbeam.co",
+   "hannah@northbeam.co",
    "jane.doe@acme.com",
    "raj.patel@acme.com",
    "cfo@acme.com"
@@ -102,12 +383,12 @@
  },
  {
   "id": "W42-p-021",
-  "consultant": "priya",
+  "consultant": "hannah",
   "ts": "2026-10-13T17:00:00",
   "kind": "email",
   "title": "Acme ops review: staffing plan, utilisation and internal process",
   "participants": [
-   "priya@northbeam.co",
+   "hannah@northbeam.co",
    "tom.ward@northbeam.co",
    "ops@acme.com"
   ],
@@ -116,20 +397,20 @@
  },
  {
   "id": "W42-p-007",
-  "consultant": "priya",
+  "consultant": "hannah",
   "ts": "2026-10-14T09:00:00",
   "kind": "call",
   "title": "Acme Q3 Audit: daily stand-up with Acme finance",
   "minutes": 30,
   "participants": [
-   "priya@northbeam.co",
+   "hannah@northbeam.co",
    "jane.doe@acme.com",
    "raj.patel@acme.com"
   ]
  },
  {
   "id": "W42-p-008",
-  "consultant": "priya",
+  "consultant": "hannah",
   "ts": "2026-10-14T10:00:00",
   "kind": "doc_edit",
   "title": "Edited Acme_Audit_Findings.docx",
@@ -139,7 +420,7 @@
  },
  {
   "id": "W42-p-018",
-  "consultant": "priya",
+  "consultant": "hannah",
   "ts": "2026-10-14T11:30:00",
   "kind": "teams",
   "title": "#acme-q3: inventory count logistics",
@@ -148,20 +429,20 @@
  },
  {
   "id": "W42-p-027",
-  "consultant": "priya",
+  "consultant": "hannah",
   "ts": "2026-10-14T13:00:00",
   "kind": "call",
   "title": "Northbeam managers' meeting",
   "minutes": 60,
   "participants": [
-   "priya@northbeam.co",
+   "hannah@northbeam.co",
    "tom.ward@northbeam.co",
    "ceo@northbeam.co"
   ]
  },
  {
   "id": "W42-p-009",
-  "consultant": "priya",
+  "consultant": "hannah",
   "ts": "2026-10-14T14:00:00",
   "kind": "doc_edit",
   "title": "Reviewed Acme_Model_v3.xlsx",
@@ -171,12 +452,12 @@
  },
  {
   "id": "W42-p-022",
-  "consultant": "priya",
+  "consultant": "hannah",
   "ts": "2026-10-14T17:15:00",
   "kind": "email",
   "title": "Acme ops review: staffing plan, utilisation and internal process",
   "participants": [
-   "priya@northbeam.co",
+   "hannah@northbeam.co",
    "tom.ward@northbeam.co",
    "ops@acme.com"
   ],
@@ -185,20 +466,20 @@
  },
  {
   "id": "W42-p-010",
-  "consultant": "priya",
+  "consultant": "hannah",
   "ts": "2026-10-15T09:00:00",
   "kind": "call",
   "title": "Acme Q3 Audit: daily stand-up with Acme finance",
   "minutes": 30,
   "participants": [
-   "priya@northbeam.co",
+   "hannah@northbeam.co",
    "jane.doe@acme.com",
    "raj.patel@acme.com"
   ]
  },
  {
   "id": "W42-p-011",
-  "consultant": "priya",
+  "consultant": "hannah",
   "ts": "2026-10-15T10:00:00",
   "kind": "doc_edit",
   "title": "Edited Acme_Audit_Findings.docx",
@@ -208,7 +489,7 @@
  },
  {
   "id": "W42-p-012",
-  "consultant": "priya",
+  "consultant": "hannah",
   "ts": "2026-10-15T14:00:00",
   "kind": "doc_edit",
   "title": "Reviewed Acme_Model_v3.xlsx",
@@ -218,25 +499,25 @@
  },
  {
   "id": "W42-p-019",
-  "consultant": "priya",
+  "consultant": "hannah",
   "ts": "2026-10-15T15:30:00",
   "kind": "call",
   "title": "Acme Q3 Audit: findings preview with CFO",
   "minutes": 60,
   "participants": [
-   "priya@northbeam.co",
+   "hannah@northbeam.co",
    "cfo@acme.com",
    "sam@northbeam.co"
   ]
  },
  {
   "id": "W42-p-023",
-  "consultant": "priya",
+  "consultant": "hannah",
   "ts": "2026-10-15T17:30:00",
   "kind": "email",
   "title": "Acme ops review: staffing plan, utilisation and internal process",
   "participants": [
-   "priya@northbeam.co",
+   "hannah@northbeam.co",
    "tom.ward@northbeam.co",
    "ops@acme.com"
   ],
@@ -245,20 +526,20 @@
  },
  {
   "id": "W42-p-013",
-  "consultant": "priya",
+  "consultant": "hannah",
   "ts": "2026-10-16T09:00:00",
   "kind": "call",
   "title": "Acme Q3 Audit: daily stand-up with Acme finance",
   "minutes": 30,
   "participants": [
-   "priya@northbeam.co",
+   "hannah@northbeam.co",
    "jane.doe@acme.com",
    "raj.patel@acme.com"
   ]
  },
  {
   "id": "W42-p-014",
-  "consultant": "priya",
+  "consultant": "hannah",
   "ts": "2026-10-16T10:00:00",
   "kind": "doc_edit",
   "title": "Edited Acme_Audit_Findings.docx",
@@ -268,19 +549,19 @@
  },
  {
   "id": "W42-p-020",
-  "consultant": "priya",
+  "consultant": "hannah",
   "ts": "2026-10-16T12:00:00",
   "kind": "email",
   "title": "RE: [ACQ3] Open items list",
   "participants": [
-   "priya@northbeam.co",
+   "hannah@northbeam.co",
    "raj.patel@acme.com"
   ],
   "thread_id": "thr-acme-open"
  },
  {
   "id": "W42-p-015",
-  "consultant": "priya",
+  "consultant": "hannah",
   "ts": "2026-10-16T14:00:00",
   "kind": "doc_edit",
   "title": "Reviewed Acme_Model_v3.xlsx",
@@ -290,13 +571,13 @@
  },
  {
   "id": "W42-p-025",
-  "consultant": "priya",
+  "consultant": "hannah",
   "ts": "2026-10-16T14:30:00",
   "kind": "call",
   "title": "Acme ops review sync (internal)",
   "minutes": 30,
   "participants": [
-   "priya@northbeam.co",
+   "hannah@northbeam.co",
    "tom.ward@northbeam.co",
    "ops@acme.com"
   ],
@@ -304,12 +585,12 @@
  },
  {
   "id": "W42-p-024",
-  "consultant": "priya",
+  "consultant": "hannah",
   "ts": "2026-10-16T16:00:00",
   "kind": "email",
   "title": "Acme ops review: staffing plan, utilisation and internal process",
   "participants": [
-   "priya@northbeam.co",
+   "hannah@northbeam.co",
    "tom.ward@northbeam.co",
    "ops@acme.com"
   ],
@@ -318,13 +599,185 @@
  },
  {
   "id": "W42-p-028",
-  "consultant": "priya",
+  "consultant": "hannah",
   "ts": "2026-10-16T17:00:00",
   "kind": "doc_edit",
   "title": "Updated /Internal/Utilisation_Q4.xlsx",
   "minutes": 30,
   "path": "/Internal/Utilisation_Q4.xlsx",
   "edits": 3
+ },
+ {
+  "id": "W42-j-001",
+  "consultant": "jordan",
+  "ts": "2026-10-13T11:00:00",
+  "kind": "doc_edit",
+  "title": "Reviewed Grid_Steerco_Pack.pptx",
+  "minutes": 60,
+  "path": "/Clients/Brightwater/Grid/Grid_Steerco_Pack.pptx",
+  "edits": 4
+ },
+ {
+  "id": "W42-j-002",
+  "consultant": "jordan",
+  "ts": "2026-10-14T10:00:00",
+  "kind": "call",
+  "title": "Brightwater Grid: steering committee",
+  "minutes": 60,
+  "participants": [
+   "jordan@northbeam.co",
+   "daniel@northbeam.co",
+   "t.okoye@bwenergy.com",
+   "grid.ops@bwenergy.com"
+  ]
+ },
+ {
+  "id": "W42-j-003",
+  "consultant": "jordan",
+  "ts": "2026-10-14T13:00:00",
+  "kind": "call",
+  "title": "Northbeam managers' meeting",
+  "minutes": 60,
+  "participants": [
+   "jordan@northbeam.co",
+   "hannah@northbeam.co",
+   "tom.ward@northbeam.co",
+   "ceo@northbeam.co"
+  ]
+ },
+ {
+  "id": "W42-j-004",
+  "consultant": "jordan",
+  "ts": "2026-10-15T15:00:00",
+  "kind": "call",
+  "title": "Kestrel Trial Supply: sponsor check-in",
+  "minutes": 45,
+  "participants": [
+   "jordan@northbeam.co",
+   "chloe@northbeam.co",
+   "l.fontaine@kestrelpharma.com"
+  ]
+ },
+ {
+  "id": "W42-j-005",
+  "consultant": "jordan",
+  "ts": "2026-10-15T17:00:00",
+  "kind": "email",
+  "title": "RE: [BWGR] Steerco follow-ups",
+  "participants": [
+   "jordan@northbeam.co",
+   "t.okoye@bwenergy.com"
+  ],
+  "thread_id": "thr-bwgrid-steerco"
+ },
+ {
+  "id": "W42-j-006",
+  "consultant": "jordan",
+  "ts": "2026-10-16T09:30:00",
+  "kind": "call",
+  "title": "Partner pipeline review",
+  "minutes": 45,
+  "participants": [
+   "jordan@northbeam.co",
+   "ceo@northbeam.co",
+   "tom.ward@northbeam.co"
+  ]
+ },
+ {
+  "id": "W42-m-001",
+  "consultant": "maya",
+  "ts": "2026-10-12T10:00:00",
+  "kind": "call",
+  "title": "Brightwater Regulatory: weekly status with compliance",
+  "minutes": 60,
+  "participants": [
+   "maya@northbeam.co",
+   "a.nolan@brightwater.com",
+   "h.zhou@brightwater.com"
+  ]
+ },
+ {
+  "id": "W42-m-002",
+  "consultant": "maya",
+  "ts": "2026-10-13T14:00:00",
+  "kind": "call",
+  "title": "Globex Strategy: sizing review with Globex strategy team",
+  "minutes": 60,
+  "participants": [
+   "maya@northbeam.co",
+   "sam@northbeam.co",
+   "m.chen@globex.com",
+   "olu.ade@globex.com"
+  ]
+ },
+ {
+  "id": "W42-m-003",
+  "consultant": "maya",
+  "ts": "2026-10-13T16:30:00",
+  "kind": "email",
+  "title": "RE: [BWRS] Submission timetable",
+  "participants": [
+   "maya@northbeam.co",
+   "a.nolan@brightwater.com"
+  ],
+  "thread_id": "thr-bwreg-timetable"
+ },
+ {
+  "id": "W42-m-004",
+  "consultant": "maya",
+  "ts": "2026-10-14T09:30:00",
+  "kind": "doc_edit",
+  "title": "Reviewed Brightwater_Submission_Draft.docx",
+  "minutes": 90,
+  "path": "/Clients/Brightwater/Regulatory/Brightwater_Submission_Draft.docx",
+  "edits": 5
+ },
+ {
+  "id": "W42-m-005",
+  "consultant": "maya",
+  "ts": "2026-10-14T13:00:00",
+  "kind": "call",
+  "title": "Northbeam managers' meeting",
+  "minutes": 60,
+  "participants": [
+   "maya@northbeam.co",
+   "hannah@northbeam.co",
+   "tom.ward@northbeam.co",
+   "ceo@northbeam.co"
+  ]
+ },
+ {
+  "id": "W42-m-006",
+  "consultant": "maya",
+  "ts": "2026-10-15T10:00:00",
+  "kind": "call",
+  "title": "Brightwater Regulatory: submission readiness checkpoint",
+  "minutes": 75,
+  "participants": [
+   "maya@northbeam.co",
+   "daniel@northbeam.co",
+   "a.nolan@brightwater.com",
+   "h.zhou@brightwater.com"
+  ]
+ },
+ {
+  "id": "W42-m-007",
+  "consultant": "maya",
+  "ts": "2026-10-15T15:00:00",
+  "kind": "doc_edit",
+  "title": "Reviewed Globex_Interviews.docx",
+  "minutes": 60,
+  "path": "/Clients/Globex/Strategy/Globex_Interviews.docx",
+  "edits": 4
+ },
+ {
+  "id": "W42-m-008",
+  "consultant": "maya",
+  "ts": "2026-10-16T11:00:00",
+  "kind": "teams",
+  "title": "#bw-regulatory: submission checklist",
+  "channel": "#bw-regulatory",
+  "messages": 6
  },
  {
   "id": "W42-s-001",
@@ -398,7 +851,7 @@
   "minutes": 60,
   "participants": [
    "sam@northbeam.co",
-   "priya@northbeam.co",
+   "hannah@northbeam.co",
    "jane.doe@acme.com"
   ]
  },
@@ -420,7 +873,7 @@
   "title": "RE: [ACQ3] Model assumptions: revenue bridge",
   "participants": [
    "sam@northbeam.co",
-   "priya@northbeam.co",
+   "hannah@northbeam.co",
    "jane.doe@acme.com"
   ],
   "thread_id": "thr-acme-model"
@@ -433,7 +886,7 @@
   "title": "RE: [ACQ3] Model assumptions: revenue bridge",
   "participants": [
    "sam@northbeam.co",
-   "priya@northbeam.co",
+   "hannah@northbeam.co",
    "jane.doe@acme.com"
   ],
   "thread_id": "thr-acme-model"
@@ -446,7 +899,7 @@
   "title": "RE: [ACQ3] Model assumptions: revenue bridge",
   "participants": [
    "sam@northbeam.co",
-   "priya@northbeam.co",
+   "hannah@northbeam.co",
    "jane.doe@acme.com"
   ],
   "thread_id": "thr-acme-model"
@@ -459,7 +912,7 @@
   "title": "RE: [ACQ3] Model assumptions: revenue bridge",
   "participants": [
    "sam@northbeam.co",
-   "priya@northbeam.co",
+   "hannah@northbeam.co",
    "jane.doe@acme.com"
   ],
   "thread_id": "thr-acme-model"
@@ -533,7 +986,7 @@
   "title": "RE: [ACQ3] Model assumptions: revenue bridge",
   "participants": [
    "sam@northbeam.co",
-   "priya@northbeam.co",
+   "hannah@northbeam.co",
    "jane.doe@acme.com"
   ],
   "thread_id": "thr-acme-model"
@@ -546,7 +999,7 @@
   "title": "RE: [ACQ3] Model assumptions: revenue bridge",
   "participants": [
    "sam@northbeam.co",
-   "priya@northbeam.co",
+   "hannah@northbeam.co",
    "jane.doe@acme.com"
   ],
   "thread_id": "thr-acme-model"
@@ -559,7 +1012,7 @@
   "title": "RE: [ACQ3] Model assumptions: revenue bridge",
   "participants": [
    "sam@northbeam.co",
-   "priya@northbeam.co",
+   "hannah@northbeam.co",
    "jane.doe@acme.com"
   ],
   "thread_id": "thr-acme-model"
@@ -572,7 +1025,7 @@
   "title": "RE: [ACQ3] Model assumptions: revenue bridge",
   "participants": [
    "sam@northbeam.co",
-   "priya@northbeam.co",
+   "hannah@northbeam.co",
    "jane.doe@acme.com"
   ],
   "thread_id": "thr-acme-model"
@@ -619,7 +1072,7 @@
   "minutes": 60,
   "participants": [
    "sam@northbeam.co",
-   "priya@northbeam.co",
+   "hannah@northbeam.co",
    "cfo@acme.com"
   ]
  },
@@ -641,7 +1094,7 @@
   "title": "RE: [ACQ3] Model assumptions: revenue bridge",
   "participants": [
    "sam@northbeam.co",
-   "priya@northbeam.co",
+   "hannah@northbeam.co",
    "jane.doe@acme.com"
   ],
   "thread_id": "thr-acme-model"
@@ -654,7 +1107,7 @@
   "title": "RE: [ACQ3] Model assumptions: revenue bridge",
   "participants": [
    "sam@northbeam.co",
-   "priya@northbeam.co",
+   "hannah@northbeam.co",
    "jane.doe@acme.com"
   ],
   "thread_id": "thr-acme-model"
@@ -667,7 +1120,7 @@
   "title": "RE: [ACQ3] Model assumptions: revenue bridge",
   "participants": [
    "sam@northbeam.co",
-   "priya@northbeam.co",
+   "hannah@northbeam.co",
    "jane.doe@acme.com"
   ],
   "thread_id": "thr-acme-model"
@@ -730,7 +1183,7 @@
   "title": "RE: [ACQ3] Model assumptions: revenue bridge",
   "participants": [
    "sam@northbeam.co",
-   "priya@northbeam.co",
+   "hannah@northbeam.co",
    "jane.doe@acme.com"
   ],
   "thread_id": "thr-acme-model"
@@ -743,7 +1196,7 @@
   "title": "RE: [ACQ3] Model assumptions: revenue bridge",
   "participants": [
    "sam@northbeam.co",
-   "priya@northbeam.co",
+   "hannah@northbeam.co",
    "jane.doe@acme.com"
   ],
   "thread_id": "thr-acme-model"
@@ -756,9 +1209,94 @@
   "title": "RE: [ACQ3] Model assumptions: revenue bridge",
   "participants": [
    "sam@northbeam.co",
-   "priya@northbeam.co",
+   "hannah@northbeam.co",
    "jane.doe@acme.com"
   ],
   "thread_id": "thr-acme-model"
+ },
+ {
+  "id": "W42-t-001",
+  "consultant": "tariq",
+  "ts": "2026-10-12T09:00:00",
+  "kind": "doc_edit",
+  "title": "Updated Brightwater_Evidence_Tracker.xlsx",
+  "minutes": 210,
+  "path": "/Clients/Brightwater/Regulatory/Brightwater_Evidence_Tracker.xlsx",
+  "edits": 15
+ },
+ {
+  "id": "W42-t-002",
+  "consultant": "tariq",
+  "ts": "2026-10-13T11:00:00",
+  "kind": "call",
+  "title": "Brightwater Regulatory: data room walkthrough",
+  "minutes": 60,
+  "participants": [
+   "tariq@northbeam.co",
+   "daniel@northbeam.co",
+   "h.zhou@brightwater.com"
+  ]
+ },
+ {
+  "id": "W42-t-003",
+  "consultant": "tariq",
+  "ts": "2026-10-14T09:00:00",
+  "kind": "doc_edit",
+  "title": "Edited Brightwater_Submission_Draft.docx",
+  "minutes": 180,
+  "path": "/Clients/Brightwater/Regulatory/Brightwater_Submission_Draft.docx",
+  "edits": 10
+ },
+ {
+  "id": "W42-t-004",
+  "consultant": "tariq",
+  "ts": "2026-10-14T14:00:00",
+  "kind": "call",
+  "title": "Analyst training: regulatory reporting basics",
+  "minutes": 60,
+  "participants": [
+   "tariq@northbeam.co",
+   "training@northbeam.co"
+  ]
+ },
+ {
+  "id": "W42-t-005",
+  "consultant": "tariq",
+  "ts": "2026-10-15T09:30:00",
+  "kind": "doc_edit",
+  "title": "Edited Lumen_CX_Survey_Analysis.xlsx",
+  "minutes": 150,
+  "path": "/Clients/Lumen/CX/Lumen_CX_Survey_Analysis.xlsx",
+  "edits": 11
+ },
+ {
+  "id": "W42-t-006",
+  "consultant": "tariq",
+  "ts": "2026-10-15T16:00:00",
+  "kind": "teams",
+  "title": "#bw-regulatory: tracker status",
+  "channel": "#bw-regulatory",
+  "messages": 8
+ },
+ {
+  "id": "W42-t-007",
+  "consultant": "tariq",
+  "ts": "2026-10-16T11:00:00",
+  "kind": "call",
+  "title": "Lumen CX: survey readout prep",
+  "minutes": 45,
+  "participants": [
+   "tariq@northbeam.co",
+   "p.ibarra@lumenretail.com"
+  ]
+ },
+ {
+  "id": "W42-t-008",
+  "consultant": "tariq",
+  "ts": "2026-10-16T16:30:00",
+  "kind": "teams",
+  "title": "#general: Friday social planning",
+  "channel": "#general",
+  "messages": 3
  }
 ]

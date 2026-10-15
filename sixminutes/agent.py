@@ -67,9 +67,24 @@ Finish with a 3-5 line summary: billed per project, held items, staffing proposa
 async def run_week(week: str) -> AsyncIterator[dict]:
     """Run the agent over one week, yielding UI events as it goes."""
     ctx = WeekContext(week)
-    store.audit("run.start", week=week, model=MODEL)
-    yield {"type": "start", "week": week, "model": MODEL}
+    pending = undisposed(ctx)
+    rerun = len(pending) < len(ctx.activity)  # some of this week was already processed: handle only the new items
+    store.audit("run.start", week=week, model=MODEL, rerun=rerun, new_items=pending if rerun else None)
+    yield {"type": "start", "week": week, "model": MODEL, "rerun": rerun, "new_items": len(pending)}
+    if rerun and not pending:
+        yield {"type": "text", "text": f"Nothing new in {week}: every activity already has a disposition."}
+        store.audit("run.end", week=week)
+        yield {"type": "done", "week": week}
+        return
     messages = [{"role": "user", "content": f"Process week {week}: timesheets for every consultant, then invoices."}]
+    if rerun:
+        ctx.only_ids = set(pending)
+        by = {a["id"]: a for a in ctx.activity}
+        messages = [{"role": "user", "content": (
+            f"Week {week} was already processed. This is a re-run for {len(pending)} new activity item(s) only: "
+            f"{json.dumps([{'id': i, 'consultant': by[i]['consultant'], 'title': by[i]['title']} for i in pending])}. "
+            "Handle just these (list_activity shows only them): bill, skip or hold each, then call create_invoice only "
+            "for projects that gained new uninvoiced entries. Don't touch anything already handled.")}]
     kwargs = dict(model=MODEL, max_tokens=16000, system=system_prompt(week), tools=SCHEMAS)
     if not IS_CLAUDE:  # other models through OpenRouter's Anthropic-compatible endpoint: plain tool use
         create = client.messages.create

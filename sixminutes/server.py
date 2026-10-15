@@ -8,7 +8,10 @@ from fastapi.responses import FileResponse
 from pydantic import BaseModel
 from sse_starlette.sse import EventSourceResponse
 
-from . import agent, billing, decisions, edits, memory, policy, store
+from datetime import date
+
+from . import agent, billing, decisions, edits, evidence, inject, memory, policy, store
+from .tools import WeekContext, undisposed
 
 app = FastAPI(title="6minutes")
 _run_lock = asyncio.Lock()
@@ -19,6 +22,24 @@ def index():
     return FileResponse(store.ROOT / "static" / "index.html")
 
 
+def week_info() -> list[dict]:
+    """Every week with a feed: date range label, size, how many items still await the agent, whether it has run."""
+    ran = {}
+    for r in store.read_audit(100000):
+        if r["event"] == "run.end":
+            ran[r["week"]] = ran.get(r["week"], 0) + 1
+    out = []
+    for w in store.weeks():
+        ctx = WeekContext(w)
+        days = sorted({a["ts"][:10] for a in ctx.activity})
+        d0, d1 = date.fromisoformat(days[0]), date.fromisoformat(days[-1])
+        label = f"{d0.day}–{d1.day} {d1.strftime('%b')}" if d0.month == d1.month else \
+            f"{d0.day} {d0.strftime('%b')}–{d1.day} {d1.strftime('%b')}"
+        out.append({"id": w, "label": label, "items": len(ctx.activity), "pending": len(undisposed(ctx)),
+                    "injected": sum(1 for a in ctx.activity if a.get("injected")), "runs": ran.get(w, 0)})
+    return out
+
+
 @app.get("/api/state")
 def state():
     firm, ledger = store.load_firm(), store.load_ledger()
@@ -27,7 +48,7 @@ def state():
     return {
         "firm": {**firm, "projects": projects}, "ledger": ledger, "audit": store.read_audit(400)[::-1],
         "memory": memory.mirror()[::-1], "rules": policy.RULES,
-        "stripe": {"dry_run": billing.DRY_RUN}, "cognee": memory.enabled(), "model": agent.MODEL,
+        "stripe": {"dry_run": billing.DRY_RUN}, "weeks": week_info(), "cognee": memory.enabled(), "model": agent.MODEL,
         "stats": {
             "billed": round(sum(e["amount"] for e in ledger["entries"]), 2),
             "hours": round(sum(e["hours"] for e in ledger["entries"]), 1),
@@ -40,7 +61,7 @@ def state():
 
 @app.get("/api/run/{week}")
 async def run(week: str):
-    if week not in ("W42", "W43"):
+    if week not in store.weeks():
         raise HTTPException(404, "unknown week")
     if _run_lock.locked():
         raise HTTPException(409, "a run is already in progress")
@@ -91,9 +112,47 @@ async def unassign(a: Assignment):
 
 @app.get("/api/activity/{week}")
 def activity(week: str):
-    if week not in ("W42", "W43"):
+    if week not in store.weeks():
         raise HTTPException(404, "unknown week")
     return edits.week_feed(week)
+
+
+@app.get("/api/evidence/{ident}")
+def get_evidence(ident: str):
+    """Everything behind one line: entry (TE-), hold (H-), skipped (NB-), invoice (in_) or an activity id."""
+    ev = evidence.evidence(ident)
+    if not ev:
+        raise HTTPException(404, f"nothing found for {ident}")
+    return ev
+
+
+@app.get("/api/compare")
+def compare(a: str | None = None, b: str | None = None):
+    """What the later week did differently because of the earlier week's decisions and memory."""
+    ws = store.weeks()
+    if len(ws) < 2 and not (a and b):
+        raise HTTPException(400, "need two weeks to compare")
+    a, b = a or ws[-2], b or ws[-1]
+    if a not in ws or b not in ws:
+        raise HTTPException(404, "unknown week")
+    return evidence.compare(a, b)
+
+
+@app.get("/api/inject/presets")
+def inject_presets(week: str | None = None):
+    week = week or store.weeks()[-1]
+    if week not in store.weeks():
+        raise HTTPException(404, "unknown week")
+    return inject.presets(week)
+
+
+@app.post("/api/inject")
+def inject_item(body: dict):
+    """Drop a new activity item into a week (state overlay; the agent picks it up on the next run of that week)."""
+    try:
+        return inject.inject(body)
+    except (ValueError, KeyError) as e:
+        raise HTTPException(400, str(e))
 
 
 class EntryEdit(BaseModel):
