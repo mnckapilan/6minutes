@@ -1,0 +1,708 @@
+[
+ {
+  "id": "W43-p-001",
+  "consultant": "priya",
+  "ts": "2026-10-19T09:00:00",
+  "kind": "call",
+  "title": "Acme Q3 Audit: daily stand-up with Acme finance",
+  "minutes": 45,
+  "participants": [
+   "priya@northbeam.co",
+   "jane.doe@acme.com",
+   "raj.patel@acme.com"
+  ]
+ },
+ {
+  "id": "W43-p-002",
+  "consultant": "priya",
+  "ts": "2026-10-19T10:00:00",
+  "kind": "doc_edit",
+  "title": "Edited Acme_Audit_Findings.docx",
+  "minutes": 210,
+  "path": "/Clients/Acme/Q3/Acme_Audit_Findings.docx",
+  "edits": 11
+ },
+ {
+  "id": "W43-p-027",
+  "consultant": "priya",
+  "ts": "2026-10-19T12:30:00",
+  "kind": "teams",
+  "title": "#general: Friday social planning",
+  "channel": "#general",
+  "messages": 4
+ },
+ {
+  "id": "W43-p-003",
+  "consultant": "priya",
+  "ts": "2026-10-19T14:00:00",
+  "kind": "doc_edit",
+  "title": "Reviewed Acme_Model_v3.xlsx",
+  "minutes": 90,
+  "path": "/Clients/Acme/Q3/Acme_Model_v3.xlsx",
+  "edits": 6
+ },
+ {
+  "id": "W43-p-016",
+  "consultant": "priya",
+  "ts": "2026-10-19T16:00:00",
+  "kind": "email",
+  "title": "RE: [ACQ3] Revenue recognition sample selection",
+  "participants": [
+   "priya@northbeam.co",
+   "cfo@acme.com"
+  ],
+  "thread_id": "thr-acme-revrec"
+ },
+ {
+  "id": "W43-p-004",
+  "consultant": "priya",
+  "ts": "2026-10-20T09:00:00",
+  "kind": "call",
+  "title": "Acme Q3 Audit: daily stand-up with Acme finance",
+  "minutes": 45,
+  "participants": [
+   "priya@northbeam.co",
+   "jane.doe@acme.com",
+   "raj.patel@acme.com"
+  ]
+ },
+ {
+  "id": "W43-p-005",
+  "consultant": "priya",
+  "ts": "2026-10-20T10:00:00",
+  "kind": "doc_edit",
+  "title": "Edited Acme_Audit_Findings.docx",
+  "minutes": 210,
+  "path": "/Clients/Acme/Q3/Acme_Audit_Findings.docx",
+  "edits": 6
+ },
+ {
+  "id": "W43-p-006",
+  "consultant": "priya",
+  "ts": "2026-10-20T14:00:00",
+  "kind": "doc_edit",
+  "title": "Reviewed Acme_Model_v3.xlsx",
+  "minutes": 120,
+  "path": "/Clients/Acme/Q3/Acme_Model_v3.xlsx",
+  "edits": 4
+ },
+ {
+  "id": "W43-p-017",
+  "consultant": "priya",
+  "ts": "2026-10-20T16:30:00",
+  "kind": "call",
+  "title": "Acme Q3 Audit: controls walkthrough",
+  "minutes": 90,
+  "participants": [
+   "priya@northbeam.co",
+   "jane.doe@acme.com",
+   "raj.patel@acme.com",
+   "cfo@acme.com"
+  ]
+ },
+ {
+  "id": "W43-p-023",
+  "consultant": "priya",
+  "ts": "2026-10-20T17:00:00",
+  "kind": "email",
+  "title": "RE: Acme ops review: staffing plan, utilisation and internal process",
+  "participants": [
+   "priya@northbeam.co",
+   "tom.ward@northbeam.co",
+   "ops@acme.com"
+  ],
+  "thread_id": "thr-acme-ops-review",
+  "note": "internal resourcing discussion; Acme ops alias cc'd"
+ },
+ {
+  "id": "W43-p-021",
+  "consultant": "priya",
+  "ts": "2026-10-20T18:00:00",
+  "kind": "doc_edit",
+  "title": "Edited Acme_Audit_Findings.docx (evening)",
+  "minutes": 120,
+  "path": "/Clients/Acme/Q3/Acme_Audit_Findings.docx",
+  "edits": 11
+ },
+ {
+  "id": "W43-p-007",
+  "consultant": "priya",
+  "ts": "2026-10-21T09:00:00",
+  "kind": "call",
+  "title": "Acme Q3 Audit: daily stand-up with Acme finance",
+  "minutes": 45,
+  "participants": [
+   "priya@northbeam.co",
+   "jane.doe@acme.com",
+   "raj.patel@acme.com"
+  ]
+ },
+ {
+  "id": "W43-p-008",
+  "consultant": "priya",
+  "ts": "2026-10-21T10:00:00",
+  "kind": "doc_edit",
+  "title": "Edited Acme_Audit_Findings.docx",
+  "minutes": 210,
+  "path": "/Clients/Acme/Q3/Acme_Audit_Findings.docx",
+  "edits": 10
+ },
+ {
+  "id": "W43-p-018",
+  "consultant": "priya",
+  "ts": "2026-10-21T11:30:00",
+  "kind": "teams",
+  "title": "#acme-q3: inventory count logistics",
+  "channel": "#acme-q3",
+  "messages": 6
+ },
+ {
+  "id": "W43-p-028",
+  "consultant": "priya",
+  "ts": "2026-10-21T13:00:00",
+  "kind": "call",
+  "title": "Northbeam managers' meeting",
+  "minutes": 60,
+  "participants": [
+   "priya@northbeam.co",
+   "tom.ward@northbeam.co",
+   "ceo@northbeam.co"
+  ]
+ },
+ {
+  "id": "W43-p-009",
+  "consultant": "priya",
+  "ts": "2026-10-21T14:00:00",
+  "kind": "doc_edit",
+  "title": "Reviewed Acme_Model_v3.xlsx",
+  "minutes": 90,
+  "path": "/Clients/Acme/Q3/Acme_Model_v3.xlsx",
+  "edits": 5
+ },
+ {
+  "id": "W43-p-024",
+  "consultant": "priya",
+  "ts": "2026-10-21T17:15:00",
+  "kind": "email",
+  "title": "RE: Acme ops review: staffing plan, utilisation and internal process",
+  "participants": [
+   "priya@northbeam.co",
+   "tom.ward@northbeam.co",
+   "ops@acme.com"
+  ],
+  "thread_id": "thr-acme-ops-review",
+  "note": "internal resourcing discussion; Acme ops alias cc'd"
+ },
+ {
+  "id": "W43-p-010",
+  "consultant": "priya",
+  "ts": "2026-10-22T09:00:00",
+  "kind": "call",
+  "title": "Acme Q3 Audit: daily stand-up with Acme finance",
+  "minutes": 45,
+  "participants": [
+   "priya@northbeam.co",
+   "jane.doe@acme.com",
+   "raj.patel@acme.com"
+  ]
+ },
+ {
+  "id": "W43-p-011",
+  "consultant": "priya",
+  "ts": "2026-10-22T10:00:00",
+  "kind": "doc_edit",
+  "title": "Edited Acme_Audit_Findings.docx",
+  "minutes": 150,
+  "path": "/Clients/Acme/Q3/Acme_Audit_Findings.docx",
+  "edits": 8
+ },
+ {
+  "id": "W43-p-012",
+  "consultant": "priya",
+  "ts": "2026-10-22T14:00:00",
+  "kind": "doc_edit",
+  "title": "Reviewed Acme_Model_v3.xlsx",
+  "minutes": 90,
+  "path": "/Clients/Acme/Q3/Acme_Model_v3.xlsx",
+  "edits": 5
+ },
+ {
+  "id": "W43-p-019",
+  "consultant": "priya",
+  "ts": "2026-10-22T15:30:00",
+  "kind": "call",
+  "title": "Acme Q3 Audit: findings preview with CFO",
+  "minutes": 60,
+  "participants": [
+   "priya@northbeam.co",
+   "cfo@acme.com",
+   "sam@northbeam.co"
+  ]
+ },
+ {
+  "id": "W43-p-025",
+  "consultant": "priya",
+  "ts": "2026-10-22T17:30:00",
+  "kind": "email",
+  "title": "RE: Acme ops review: staffing plan, utilisation and internal process",
+  "participants": [
+   "priya@northbeam.co",
+   "tom.ward@northbeam.co",
+   "ops@acme.com"
+  ],
+  "thread_id": "thr-acme-ops-review",
+  "note": "internal resourcing discussion; Acme ops alias cc'd"
+ },
+ {
+  "id": "W43-p-022",
+  "consultant": "priya",
+  "ts": "2026-10-22T18:00:00",
+  "kind": "doc_edit",
+  "title": "Reviewed Acme_Model_v3.xlsx (evening)",
+  "minutes": 90,
+  "path": "/Clients/Acme/Q3/Acme_Model_v3.xlsx",
+  "edits": 7
+ },
+ {
+  "id": "W43-p-013",
+  "consultant": "priya",
+  "ts": "2026-10-23T09:00:00",
+  "kind": "call",
+  "title": "Acme Q3 Audit: daily stand-up with Acme finance",
+  "minutes": 45,
+  "participants": [
+   "priya@northbeam.co",
+   "jane.doe@acme.com",
+   "raj.patel@acme.com"
+  ]
+ },
+ {
+  "id": "W43-p-014",
+  "consultant": "priya",
+  "ts": "2026-10-23T10:00:00",
+  "kind": "doc_edit",
+  "title": "Edited Acme_Audit_Findings.docx",
+  "minutes": 210,
+  "path": "/Clients/Acme/Q3/Acme_Audit_Findings.docx",
+  "edits": 6
+ },
+ {
+  "id": "W43-p-020",
+  "consultant": "priya",
+  "ts": "2026-10-23T12:00:00",
+  "kind": "email",
+  "title": "RE: [ACQ3] Open items list",
+  "participants": [
+   "priya@northbeam.co",
+   "raj.patel@acme.com"
+  ],
+  "thread_id": "thr-acme-open"
+ },
+ {
+  "id": "W43-p-015",
+  "consultant": "priya",
+  "ts": "2026-10-23T14:00:00",
+  "kind": "doc_edit",
+  "title": "Reviewed Acme_Model_v3.xlsx",
+  "minutes": 90,
+  "path": "/Clients/Acme/Q3/Acme_Model_v3.xlsx",
+  "edits": 4
+ },
+ {
+  "id": "W43-p-026",
+  "consultant": "priya",
+  "ts": "2026-10-23T14:30:00",
+  "kind": "call",
+  "title": "Acme ops review sync (internal)",
+  "minutes": 30,
+  "participants": [
+   "priya@northbeam.co",
+   "tom.ward@northbeam.co",
+   "ops@acme.com"
+  ],
+  "thread_id": "thr-acme-ops-review"
+ },
+ {
+  "id": "W43-p-029",
+  "consultant": "priya",
+  "ts": "2026-10-23T17:00:00",
+  "kind": "doc_edit",
+  "title": "Updated /Internal/Utilisation_Q4.xlsx",
+  "minutes": 30,
+  "path": "/Internal/Utilisation_Q4.xlsx",
+  "edits": 3
+ },
+ {
+  "id": "W43-s-001",
+  "consultant": "sam",
+  "ts": "2026-10-19T09:30:00",
+  "kind": "doc_edit",
+  "title": "Edited Globex_Market_Sizing.pptx",
+  "minutes": 150,
+  "path": "/Clients/Globex/Strategy/Globex_Market_Sizing.pptx",
+  "edits": 18
+ },
+ {
+  "id": "W43-s-011",
+  "consultant": "sam",
+  "ts": "2026-10-19T11:00:00",
+  "kind": "call",
+  "title": "Globex Strategy: kickoff of market sizing sprint",
+  "minutes": 60,
+  "participants": [
+   "sam@northbeam.co",
+   "m.chen@globex.com",
+   "olu.ade@globex.com"
+  ]
+ },
+ {
+  "id": "W43-s-002",
+  "consultant": "sam",
+  "ts": "2026-10-19T13:30:00",
+  "kind": "teams",
+  "title": "#globex-strategy: research updates",
+  "channel": "#globex-strategy",
+  "messages": 7
+ },
+ {
+  "id": "W43-s-016",
+  "consultant": "sam",
+  "ts": "2026-10-19T15:00:00",
+  "kind": "call",
+  "title": "Acme Q3 Audit: revenue bridge review",
+  "minutes": 60,
+  "participants": [
+   "sam@northbeam.co",
+   "priya@northbeam.co",
+   "jane.doe@acme.com"
+  ]
+ },
+ {
+  "id": "W43-s-018",
+  "consultant": "sam",
+  "ts": "2026-10-19T16:00:00",
+  "kind": "doc_edit",
+  "title": "Edited Acme_Model_v3.xlsx",
+  "minutes": 60,
+  "path": "/Clients/Acme/Q3/Acme_Model_v3.xlsx",
+  "edits": 3
+ },
+ {
+  "id": "W43-s-023",
+  "consultant": "sam",
+  "ts": "2026-10-19T17:00:00",
+  "kind": "email",
+  "title": "RE: [ACQ3] Model assumptions: revenue bridge",
+  "participants": [
+   "sam@northbeam.co",
+   "jane.doe@acme.com"
+  ],
+  "thread_id": "thr-acme-model"
+ },
+ {
+  "id": "W43-s-028",
+  "consultant": "sam",
+  "ts": "2026-10-19T17:25:00",
+  "kind": "email",
+  "title": "RE: [ACQ3] Model assumptions: revenue bridge",
+  "participants": [
+   "sam@northbeam.co",
+   "jane.doe@acme.com"
+  ],
+  "thread_id": "thr-acme-model"
+ },
+ {
+  "id": "W43-s-003",
+  "consultant": "sam",
+  "ts": "2026-10-20T09:30:00",
+  "kind": "doc_edit",
+  "title": "Edited Globex_Market_Sizing.pptx",
+  "minutes": 180,
+  "path": "/Clients/Globex/Strategy/Globex_Market_Sizing.pptx",
+  "edits": 14
+ },
+ {
+  "id": "W43-s-012",
+  "consultant": "sam",
+  "ts": "2026-10-20T11:00:00",
+  "kind": "call",
+  "title": "Globex Strategy: expert interview",
+  "minutes": 45,
+  "participants": [
+   "sam@northbeam.co",
+   "olu.ade@globex.com"
+  ]
+ },
+ {
+  "id": "W43-s-004",
+  "consultant": "sam",
+  "ts": "2026-10-20T13:30:00",
+  "kind": "teams",
+  "title": "#globex-strategy: research updates",
+  "channel": "#globex-strategy",
+  "messages": 5
+ },
+ {
+  "id": "W43-s-019",
+  "consultant": "sam",
+  "ts": "2026-10-20T16:00:00",
+  "kind": "doc_edit",
+  "title": "Edited Acme_Model_v3.xlsx",
+  "minutes": 75,
+  "path": "/Clients/Acme/Q3/Acme_Model_v3.xlsx",
+  "edits": 3
+ },
+ {
+  "id": "W43-s-024",
+  "consultant": "sam",
+  "ts": "2026-10-20T17:05:00",
+  "kind": "email",
+  "title": "RE: [ACQ3] Model assumptions: revenue bridge",
+  "participants": [
+   "sam@northbeam.co",
+   "jane.doe@acme.com"
+  ],
+  "thread_id": "thr-acme-model"
+ },
+ {
+  "id": "W43-s-029",
+  "consultant": "sam",
+  "ts": "2026-10-20T17:30:00",
+  "kind": "email",
+  "title": "RE: [ACQ3] Model assumptions: revenue bridge",
+  "participants": [
+   "sam@northbeam.co",
+   "jane.doe@acme.com"
+  ],
+  "thread_id": "thr-acme-model"
+ },
+ {
+  "id": "W43-s-005",
+  "consultant": "sam",
+  "ts": "2026-10-21T09:30:00",
+  "kind": "doc_edit",
+  "title": "Edited Globex_Market_Sizing.pptx",
+  "minutes": 210,
+  "path": "/Clients/Globex/Strategy/Globex_Market_Sizing.pptx",
+  "edits": 17
+ },
+ {
+  "id": "W43-s-013",
+  "consultant": "sam",
+  "ts": "2026-10-21T10:30:00",
+  "kind": "doc_edit",
+  "title": "Edited Globex_Interviews.docx",
+  "minutes": 90,
+  "path": "/Clients/Globex/Strategy/Globex_Interviews.docx",
+  "edits": 9
+ },
+ {
+  "id": "W43-s-033",
+  "consultant": "sam",
+  "ts": "2026-10-21T12:30:00",
+  "kind": "call",
+  "title": "Analyst training: Excel modelling",
+  "minutes": 60,
+  "participants": [
+   "sam@northbeam.co",
+   "training@northbeam.co"
+  ]
+ },
+ {
+  "id": "W43-s-006",
+  "consultant": "sam",
+  "ts": "2026-10-21T13:30:00",
+  "kind": "teams",
+  "title": "#globex-strategy: research updates",
+  "channel": "#globex-strategy",
+  "messages": 9
+ },
+ {
+  "id": "W43-s-017",
+  "consultant": "sam",
+  "ts": "2026-10-21T15:00:00",
+  "kind": "call",
+  "title": "Acme Q3 Audit: sensitivity analysis with FP&A",
+  "minutes": 45,
+  "participants": [
+   "sam@northbeam.co",
+   "jane.doe@acme.com",
+   "raj.patel@acme.com"
+  ]
+ },
+ {
+  "id": "W43-s-020",
+  "consultant": "sam",
+  "ts": "2026-10-21T16:00:00",
+  "kind": "doc_edit",
+  "title": "Edited Acme_Model_v3.xlsx",
+  "minutes": 45,
+  "path": "/Clients/Acme/Q3/Acme_Model_v3.xlsx",
+  "edits": 3
+ },
+ {
+  "id": "W43-s-025",
+  "consultant": "sam",
+  "ts": "2026-10-21T17:10:00",
+  "kind": "email",
+  "title": "RE: [ACQ3] Model assumptions: revenue bridge",
+  "participants": [
+   "sam@northbeam.co",
+   "jane.doe@acme.com"
+  ],
+  "thread_id": "thr-acme-model"
+ },
+ {
+  "id": "W43-s-030",
+  "consultant": "sam",
+  "ts": "2026-10-21T17:35:00",
+  "kind": "email",
+  "title": "RE: [ACQ3] Model assumptions: revenue bridge",
+  "participants": [
+   "sam@northbeam.co",
+   "jane.doe@acme.com"
+  ],
+  "thread_id": "thr-acme-model"
+ },
+ {
+  "id": "W43-s-007",
+  "consultant": "sam",
+  "ts": "2026-10-22T09:30:00",
+  "kind": "doc_edit",
+  "title": "Edited Globex_Market_Sizing.pptx",
+  "minutes": 150,
+  "path": "/Clients/Globex/Strategy/Globex_Market_Sizing.pptx",
+  "edits": 18
+ },
+ {
+  "id": "W43-s-014",
+  "consultant": "sam",
+  "ts": "2026-10-22T11:00:00",
+  "kind": "call",
+  "title": "Globex Strategy: steerco prep",
+  "minutes": 60,
+  "participants": [
+   "sam@northbeam.co",
+   "m.chen@globex.com",
+   "olu.ade@globex.com",
+   "strategy@globex.com"
+  ]
+ },
+ {
+  "id": "W43-s-008",
+  "consultant": "sam",
+  "ts": "2026-10-22T13:30:00",
+  "kind": "teams",
+  "title": "#globex-strategy: research updates",
+  "channel": "#globex-strategy",
+  "messages": 6
+ },
+ {
+  "id": "W43-s-021",
+  "consultant": "sam",
+  "ts": "2026-10-22T16:00:00",
+  "kind": "doc_edit",
+  "title": "Edited Acme_Model_v3.xlsx",
+  "minutes": 90,
+  "path": "/Clients/Acme/Q3/Acme_Model_v3.xlsx",
+  "edits": 3
+ },
+ {
+  "id": "W43-s-026",
+  "consultant": "sam",
+  "ts": "2026-10-22T17:15:00",
+  "kind": "email",
+  "title": "RE: [ACQ3] Model assumptions: revenue bridge",
+  "participants": [
+   "sam@northbeam.co",
+   "jane.doe@acme.com"
+  ],
+  "thread_id": "thr-acme-model"
+ },
+ {
+  "id": "W43-s-031",
+  "consultant": "sam",
+  "ts": "2026-10-22T17:40:00",
+  "kind": "email",
+  "title": "RE: [ACQ3] Model assumptions: revenue bridge",
+  "participants": [
+   "sam@northbeam.co",
+   "jane.doe@acme.com"
+  ],
+  "thread_id": "thr-acme-model"
+ },
+ {
+  "id": "W43-s-009",
+  "consultant": "sam",
+  "ts": "2026-10-23T09:30:00",
+  "kind": "doc_edit",
+  "title": "Edited Globex_Market_Sizing.pptx",
+  "minutes": 150,
+  "path": "/Clients/Globex/Strategy/Globex_Market_Sizing.pptx",
+  "edits": 10
+ },
+ {
+  "id": "W43-s-015",
+  "consultant": "sam",
+  "ts": "2026-10-23T10:00:00",
+  "kind": "email",
+  "title": "RE: [GLXS] Draft sizing for review",
+  "participants": [
+   "sam@northbeam.co",
+   "m.chen@globex.com"
+  ],
+  "thread_id": "thr-glx-sizing"
+ },
+ {
+  "id": "W43-s-010",
+  "consultant": "sam",
+  "ts": "2026-10-23T13:30:00",
+  "kind": "teams",
+  "title": "#globex-strategy: research updates",
+  "channel": "#globex-strategy",
+  "messages": 7
+ },
+ {
+  "id": "W43-s-022",
+  "consultant": "sam",
+  "ts": "2026-10-23T16:00:00",
+  "kind": "doc_edit",
+  "title": "Edited Acme_Model_v3.xlsx",
+  "minutes": 60,
+  "path": "/Clients/Acme/Q3/Acme_Model_v3.xlsx",
+  "edits": 3
+ },
+ {
+  "id": "W43-s-034",
+  "consultant": "sam",
+  "ts": "2026-10-23T16:00:00",
+  "kind": "teams",
+  "title": "#general: Friday social planning",
+  "channel": "#general",
+  "messages": 3
+ },
+ {
+  "id": "W43-s-027",
+  "consultant": "sam",
+  "ts": "2026-10-23T17:20:00",
+  "kind": "email",
+  "title": "RE: [ACQ3] Model assumptions: revenue bridge",
+  "participants": [
+   "sam@northbeam.co",
+   "jane.doe@acme.com"
+  ],
+  "thread_id": "thr-acme-model"
+ },
+ {
+  "id": "W43-s-032",
+  "consultant": "sam",
+  "ts": "2026-10-23T17:45:00",
+  "kind": "email",
+  "title": "RE: [ACQ3] Model assumptions: revenue bridge",
+  "participants": [
+   "sam@northbeam.co",
+   "jane.doe@acme.com"
+  ],
+  "thread_id": "thr-acme-model"
+ }
+]

@@ -1,0 +1,82 @@
+# 6minutes firm configuration: the hard facts the agent must obey.
+# Policies stack: firm default -> client override -> project override.
+# This is the pristine copy; the running app works on state/firm.yaml (reset copies this over).
+
+firm:
+  name: Northbeam Advisory
+  domain: northbeam.co
+  currency: gbp
+  policy:
+    rate_card: { Partner: 350, Manager: 200, Consultant: 160, Analyst: 120 }
+    rounding_hours: 0.1          # R4: 0.1h = 6 minutes
+    max_hours_per_day: 10        # R4
+    confidence_threshold: 0.7    # R6
+    minutes_per_email: 6
+    minutes_per_teams_message: 3
+    billable_kinds: [call, doc_edit, email, teams]
+    staffing_min_hours: 3        # sustained work before proposing an assignment
+    staffing_min_days: 2
+
+consultants:
+  priya: { name: Priya Shah, email: priya@northbeam.co, title: Manager }
+  sam:   { name: Sam Lee,    email: sam@northbeam.co,   title: Analyst }
+
+clients:
+  acme:
+    name: Acme Corp
+    billing_email: ap@acme.example
+    domains: [acme.com]
+  globex:
+    name: Globex Industries
+    billing_email: finance@globex.example
+    domains: [globex.com]
+    policy:
+      confidence_threshold: 0.75   # client-level override
+
+projects:
+  ACME-Q3:
+    name: Acme Q3 Audit
+    client: acme
+    code: ACQ3
+    po_number: PO-4471
+    policy:
+      po_cap_gbp: 12600          # R5
+    match:
+      domains: [acme.com]
+      channels: ["#acme-q3"]
+      folders: [/Clients/Acme/Q3]
+      files: [Acme_Model_v3.xlsx, Acme_Audit_Findings.docx]
+    non_billable_threads: []     # R3: filled by manager decisions
+    assignments:
+      - { consultant: priya, role: Manager, hours_per_week: 25, start: 2026-09-01, end: 2026-12-31 }
+
+  GLX-STRAT:
+    name: Globex Strategy
+    client: globex
+    code: GLXS
+    po_number: PO-GX-208
+    policy:
+      po_cap_gbp: 40000
+    match:
+      domains: [globex.com]
+      channels: ["#globex-strategy"]
+      folders: [/Clients/Globex/Strategy]
+      files: [Globex_Market_Sizing.pptx, Globex_Interviews.docx]
+    non_billable_threads: []
+    assignments:
+      - { consultant: sam, role: Analyst, hours_per_week: 30, start: 2026-09-15, end: 2026-12-31 }
+
+  INTERNAL:
+    name: Internal
+    client: null
+    code: INT
+    billable: false
+    match:
+      domains: [northbeam.co]
+      channels: ["#general", "#ops"]
+      folders: [/Internal]
+      files: []
+    non_billable_threads: []
+    assignments:
+      - { consultant: priya, role: Manager, hours_per_week: 5, start: 2026-01-01, end: 2026-12-31 }
+      - { consultant: sam, role: Analyst, hours_per_week: 5, start: 2026-01-01, end: 2026-12-31 }

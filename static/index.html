@@ -1,0 +1,330 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>6minutes</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#f6f7f9; --panel:#fff; --ink:#14171f; --muted:#667085; --line:#e4e7ec; --soft:#f2f4f7;
+  --accent:#635bff; --accent-soft:#eeedff; --ok:#12805c; --ok-soft:#e7f6ef; --warn:#b54708; --warn-soft:#fff4e5;
+  --bad:#c01048; --bad-soft:#fdecf1; --mono:'JetBrains Mono',ui-monospace,monospace;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:14px/1.45 Inter,system-ui,sans-serif}
+header{display:flex;align-items:center;gap:16px;padding:14px 24px;background:var(--panel);border-bottom:1px solid var(--line);position:sticky;top:0;z-index:5}
+.logo{font-weight:700;font-size:20px;letter-spacing:-.02em}
+.logo span{color:var(--accent)}
+.tag{color:var(--muted);font-size:13px}
+.grow{flex:1}
+.badge{font-size:12px;padding:3px 8px;border-radius:99px;background:var(--soft);color:var(--muted);white-space:nowrap}
+.badge.on{background:var(--ok-soft);color:var(--ok)}
+button{font:inherit;font-weight:500;border:1px solid var(--line);background:var(--panel);color:var(--ink);padding:7px 14px;border-radius:8px;cursor:pointer}
+button:hover{border-color:#c9ced8}
+button.primary{background:var(--accent);border-color:var(--accent);color:#fff}
+button.primary:hover{filter:brightness(1.08)}
+button.ok{background:var(--ok);border-color:var(--ok);color:#fff}
+button.small{padding:4px 10px;font-size:13px}
+button:disabled{opacity:.5;cursor:default}
+main{padding:20px 24px;max-width:1500px;margin:0 auto}
+.stats{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin-bottom:16px}
+.stat{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:12px 16px}
+.stat .k{color:var(--muted);font-size:12px;text-transform:uppercase;letter-spacing:.04em}
+.stat .v{font-size:24px;font-weight:600;letter-spacing:-.02em;font-variant-numeric:tabular-nums}
+.stat.recover .v{color:var(--ok)}
+.grid{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,1fr);gap:16px}
+.panel{background:var(--panel);border:1px solid var(--line);border-radius:12px;overflow:hidden;display:flex;flex-direction:column}
+.panel h2{font-size:13px;font-weight:600;margin:0;padding:12px 16px;border-bottom:1px solid var(--line);display:flex;align-items:center;gap:8px}
+.panel h2 .count{background:var(--soft);color:var(--muted);border-radius:99px;padding:0 8px;font-weight:500}
+.body{padding:12px 16px}
+#log{height:520px;overflow:auto;padding:8px 12px;font-size:13px}
+.step{display:flex;gap:10px;padding:6px 4px;border-bottom:1px dashed var(--soft);align-items:flex-start}
+.step .ico{width:22px;height:22px;flex:none;border-radius:6px;display:grid;place-items:center;font-size:12px;background:var(--soft)}
+.step.ok .ico{background:var(--ok-soft);color:var(--ok)}
+.step.bad .ico{background:var(--bad-soft);color:var(--bad)}
+.step.hold .ico{background:var(--warn-soft);color:var(--warn)}
+.step.mem .ico{background:var(--accent-soft);color:var(--accent)}
+.step .t{flex:1;min-width:0}
+.step .sub{color:var(--muted);font-size:12px;overflow-wrap:anywhere}
+.step.say{color:var(--muted);font-style:italic}
+.empty{color:var(--muted);padding:16px;text-align:center}
+.card{border:1px solid var(--line);border-radius:10px;padding:12px;margin-bottom:10px}
+.card.proposal{border-color:#c7c3ff;background:linear-gradient(0deg,#fff, #faf9ff)}
+.card.cap{border-color:#fedf89;background:#fffcf5}
+.card .kind{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);margin-bottom:4px}
+.card.proposal .kind{color:var(--accent)} .card.cap .kind{color:var(--warn)}
+.card .actions{display:flex;gap:8px;margin-top:10px}
+.card .done{margin-top:8px;font-size:12px;color:var(--ok)}
+ul.ev{margin:6px 0 0;padding-left:18px;color:var(--muted);font-size:12px}
+table{width:100%;border-collapse:collapse;font-size:13px}
+th{text-align:left;font-weight:500;color:var(--muted);font-size:12px;padding:6px 8px;border-bottom:1px solid var(--line)}
+td{padding:7px 8px;border-bottom:1px solid var(--soft);vertical-align:top}
+td.num,th.num{text-align:right;font-variant-numeric:tabular-nums}
+.pill{display:inline-block;font-size:11px;padding:1px 7px;border-radius:99px;background:var(--soft);color:var(--muted);font-family:var(--mono)}
+.pill.ok{background:var(--ok-soft);color:var(--ok)} .pill.warn{background:var(--warn-soft);color:var(--warn)} .pill.acc{background:var(--accent-soft);color:var(--accent)}
+.tabs{display:flex;gap:4px;padding:8px 12px 0;border-bottom:1px solid var(--line)}
+.tabs button{border:none;border-bottom:2px solid transparent;border-radius:0;padding:8px 12px;color:var(--muted)}
+.tabs button.active{color:var(--ink);border-bottom-color:var(--accent)}
+.mono{font-family:var(--mono);font-size:12px}
+a{color:var(--accent);text-decoration:none} a:hover{text-decoration:underline}
+.lower{margin-top:16px}
+.why{color:var(--muted);font-size:12px}
+.proj{border:1px solid var(--line);border-radius:10px;padding:12px;margin-bottom:10px}
+.proj h3{margin:0 0 6px;font-size:14px}
+.kv{display:grid;grid-template-columns:150px 1fr;gap:2px 12px;font-size:12px}
+.kv div:nth-child(odd){color:var(--muted)}
+@media (max-width:1000px){.grid{grid-template-columns:1fr}.stats{grid-template-columns:repeat(2,1fr)}}
+</style>
+</head>
+<body>
+<header>
+  <div class="logo">6<span>minutes</span></div>
+  <div class="tag">Activity → timesheets → Stripe invoices, inside the firm's billing policy</div>
+  <div class="grow"></div>
+  <span class="badge" id="b-model"></span>
+  <span class="badge" id="b-cognee">Cognee</span>
+  <span class="badge" id="b-stripe">Stripe</span>
+  <button class="primary" id="run-W42" onclick="runWeek('W42')">Run W42</button>
+  <button class="primary" id="run-W43" onclick="runWeek('W43')">Run W43</button>
+  <button onclick="resetAll()">Reset</button>
+</header>
+<main>
+  <div class="stats">
+    <div class="stat"><div class="k">Billed</div><div class="v" id="s-billed">£0</div></div>
+    <div class="stat"><div class="k">Billable hours</div><div class="v" id="s-hours">0</div></div>
+    <div class="stat recover"><div class="k">Recovered revenue</div><div class="v" id="s-recovered">£0</div></div>
+    <div class="stat"><div class="k">Held for review</div><div class="v" id="s-held">0h</div></div>
+    <div class="stat"><div class="k">Invoiced in Stripe</div><div class="v" id="s-invoiced">£0</div></div>
+  </div>
+
+  <div class="grid">
+    <section class="panel">
+      <h2>Agent <span class="count" id="run-status">idle</span></h2>
+      <div id="log"><div class="empty">Press <b>Run W42</b> to let the agent work through the week.</div></div>
+    </section>
+    <div style="display:flex;flex-direction:column;gap:16px;min-width:0">
+      <section class="panel">
+        <h2>Needs a decision <span class="count" id="inbox-count">0</span></h2>
+        <div class="body" id="inbox"></div>
+      </section>
+      <section class="panel">
+        <h2>Stripe invoices <span class="count" id="inv-count">0</span></h2>
+        <div class="body" id="invoices"></div>
+      </section>
+    </div>
+  </div>
+
+  <section class="panel lower">
+    <div class="tabs">
+      <button data-tab="timesheets" class="active">Timesheets</button>
+      <button data-tab="audit">Audit trail</button>
+      <button data-tab="memory">Memory (Cognee)</button>
+      <button data-tab="projects">Projects &amp; policy</button>
+    </div>
+    <div class="body" id="tab-body"></div>
+  </section>
+</main>
+
+<script>
+let S = null, tab = 'timesheets', running = false;
+const $ = id => document.getElementById(id);
+const gbp = n => '£' + Number(n || 0).toLocaleString('en-GB', {minimumFractionDigits: 0, maximumFractionDigits: 2});
+const esc = s => String(s ?? '').replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const first = c => (S?.firm.consultants[c]?.name || c).split(' ')[0];
+const pname = k => S?.firm.projects[k]?.name || k;
+const dlabel = d => new Date(d + 'T00:00').toLocaleDateString('en-GB', {day: 'numeric', month: 'short'});
+
+async function load() {
+  S = await (await fetch('/api/state')).json();
+  render();
+}
+
+function render() {
+  $('b-model').textContent = S.model;
+  $('b-cognee').textContent = S.cognee ? 'Cognee Cloud' : 'Cognee: local';
+  $('b-cognee').className = 'badge' + (S.cognee ? ' on' : '');
+  $('b-stripe').textContent = S.stripe.dry_run ? 'Stripe: dry run' : 'Stripe test mode';
+  $('b-stripe').className = 'badge' + (S.stripe.dry_run ? '' : ' on');
+  const st = S.stats;
+  $('s-billed').textContent = gbp(st.billed);
+  $('s-hours').textContent = st.hours;
+  $('s-recovered').textContent = gbp(st.recovered);
+  $('s-held').textContent = st.held + 'h';
+  $('s-invoiced').textContent = gbp(st.invoiced);
+  renderInbox(); renderInvoices(); renderTab();
+}
+
+function renderInbox() {
+  const L = S.ledger, out = [];
+  for (const p of L.proposals.filter(p => p.status === 'open')) {
+    const ev = p.evidence, cur = Object.entries(S.firm.projects)
+      .filter(([k, pr]) => k !== 'INTERNAL' && pr.assignments.some(a => a.consultant === p.consultant)).map(([k]) => pname(k));
+    out.push(`<div class="card proposal"><div class="kind">Staffing proposal · R7</div>
+      <div><b>${first(p.consultant)}</b> (${p.role}${cur.length ? ', assigned to ' + cur.join(', ') : ''}) spent
+      <b>~${ev.hours}h on ${pname(p.project)}</b> this week: ${ev.client_calls} client calls, ${ev.doc_edits} edits to
+      <span class="mono">${esc(ev.files.join(', '))}</span>, ${ev.emails} emails on the project thread.
+      Add ${first(p.consultant)} to ${pname(p.project)} as ${p.role} at ${gbp(p.rate)}/h from ${dlabel(p.from_date)}?</div>
+      <div class="why">${esc(p.agent_evidence)}</div>
+      <div class="actions"><button class="ok small" onclick="decide('${p.id}','approve')">Approve</button>
+      <button class="small" onclick="decide('${p.id}','not_billable')">Not billable</button>
+      <button class="small" onclick="decide('${p.id}','ignore')">Ignore</button></div></div>`);
+  }
+  for (const h of L.holds.filter(h => h.status === 'open' && !(h.proposal_id && L.proposals.find(p => p.id === h.proposal_id && p.status === 'open')))) {
+    if (h.type === 'po_cap') {
+      out.push(`<div class="card cap"><div class="kind">Guardrail · R5 PO cap</div>
+        <div><b>${pname(h.project)}</b> hit its PO cap (${gbp(S.firm.projects[h.project].effective_policy.po_cap_gbp)}).
+        Billing stopped: <b>${h.hours}h (${gbp(h.amount)})</b> of ${h.week} work not billed.</div>
+        <div class="why">Flagged to the engagement manager to raise a change order. ${h.activity_ids.length} activities.</div>
+        <div class="actions"><button class="small" onclick="decide('${h.id}','ignore')">Acknowledge</button></div></div>`);
+    } else {
+      const acts = h.activity_ids.length;
+      out.push(`<div class="card"><div class="kind">Held · ${h.rule} · ${first(h.consultant)}${h.project ? ' · ' + pname(h.project) : ''}</div>
+        <div>${esc(h.reason)}</div><div class="why">${h.hours.toFixed(1)}h · ${acts} activities · ${h.week}</div>
+        <div class="actions"><button class="small" onclick="decide('${h.id}','approve')">Bill it</button>
+        <button class="small" onclick="decide('${h.id}','not_billable')">Not billable</button>
+        <button class="small" onclick="decide('${h.id}','ignore')">Ignore</button></div></div>`);
+    }
+  }
+  $('inbox').innerHTML = out.join('') || '<div class="empty">Nothing waiting. The agent holds anything it can\'t bill under policy.</div>';
+  $('inbox-count').textContent = out.length;
+}
+
+function renderInvoices() {
+  const inv = S.ledger.invoices.slice().reverse();
+  $('inv-count').textContent = inv.length;
+  $('invoices').innerHTML = inv.length ? `<table><tr><th>Invoice</th><th>Project</th><th>Period</th><th class="num">Amount</th><th>Status</th><th></th></tr>` +
+    inv.map(i => `<tr><td class="mono">${i.dashboard_url ? `<a href="${i.dashboard_url}" target="_blank">${esc(i.number || i.id.slice(0, 14))}</a>` : esc(i.id.slice(0, 14))}</td>
+      <td>${pname(i.project)}${i.memo ? `<div class="why">${esc(i.memo)}</div>` : ''}</td><td>${i.period}</td>
+      <td class="num">${gbp(i.amount)}</td><td><span class="pill ${i.status === 'paid' ? 'ok' : 'acc'}">${i.status}</span></td>
+      <td>${i.status !== 'paid' ? `<button class="small" onclick="markPaid('${i.id}')">Mark paid</button>` : (i.hosted_invoice_url ? `<a href="${i.hosted_invoice_url}" target="_blank">view</a>` : '')}</td></tr>`).join('') + '</table>'
+    : '<div class="empty">No invoices yet.</div>';
+}
+
+function renderTab() {
+  document.querySelectorAll('.tabs button').forEach(b => b.classList.toggle('active', b.dataset.tab === tab));
+  const L = S.ledger;
+  if (tab === 'timesheets') {
+    const cons = Object.keys(S.firm.consultants);
+    $('tab-body').innerHTML = cons.map(c => {
+      const es = L.entries.filter(e => e.consultant === c);
+      const sk = L.skipped.filter(s => s.consultant === c);
+      const hd = L.holds.filter(h => h.consultant === c && h.type !== 'po_cap');
+      const tot = es.reduce((a, e) => a + e.hours, 0);
+      return `<h3 style="margin:8px 0">${S.firm.consultants[c].name} <span class="why">· ${S.firm.consultants[c].title} · ${tot.toFixed(1)}h billed · ${sk.reduce((a, s) => a + s.hours, 0).toFixed(1)}h non-billable</span></h3>
+      <table><tr><th>Week</th><th>Day</th><th>Project</th><th class="num">Hours</th><th class="num">Amount</th><th>Rule</th><th>Why</th><th>Invoice</th></tr>
+      ${es.map(e => `<tr><td>${e.week}</td><td>${e.days.map(dlabel).join(', ')}</td><td>${pname(e.project)}</td>
+        <td class="num">${e.hours.toFixed(1)}</td><td class="num">${gbp(e.amount)}</td>
+        <td><span class="pill ok">${e.rule_id}</span> ${e.decision_ref ? `<span class="pill acc">${e.decision_ref}</span>` : ''}</td>
+        <td class="why">${esc(e.reason)}${e.decision_note ? ' · <b>' + esc(e.decision_note) + '</b>' : ''}${e.flags.length ? '<br><span style="color:var(--warn)">' + e.flags.map(esc).join('<br>') + '</span>' : ''}</td>
+        <td>${e.invoice_id ? '<span class="pill ok">invoiced</span>' : '<span class="pill">pending</span>'}</td></tr>`).join('')}
+      ${sk.map(s => `<tr><td>${s.week}</td><td></td><td class="why">non-billable</td><td class="num why">${s.hours.toFixed(1)}</td><td></td><td><span class="pill">${s.rule_id}</span></td><td class="why">${esc(s.reason)}</td><td></td></tr>`).join('')}
+      ${hd.map(h => `<tr><td>${h.week}</td><td></td><td class="why">${h.project ? pname(h.project) : ''}</td><td class="num why">${h.hours.toFixed(1)}</td><td></td><td><span class="pill warn">${h.rule}</span></td><td class="why">held: ${esc(h.reason)}</td><td><span class="pill">${h.status}</span></td></tr>`).join('')}
+      </table>`;
+    }).join('');
+  } else if (tab === 'audit') {
+    $('tab-body').innerHTML = `<table><tr><th>Time</th><th>Event</th><th>Detail</th></tr>` + S.audit.filter(a => a.event !== 'tool').slice(0, 200).map(a => {
+      const {ts, event, ...rest} = a;
+      return `<tr><td class="mono">${ts.slice(11, 19)}</td><td><span class="pill ${event.includes('rejected') ? 'warn' : event.startsWith('memory') ? 'acc' : ''}">${event}</span></td>
+        <td class="mono" style="overflow-wrap:anywhere">${esc(JSON.stringify(rest)).slice(0, 600)}</td></tr>`;
+    }).join('') + '</table>';
+  } else if (tab === 'memory') {
+    const recalls = S.audit.filter(a => a.event === 'memory.recall').slice(0, 20);
+    $('tab-body').innerHTML = `<h3 style="margin:4px 0 8px">Remembered</h3>` + S.memory.map(m =>
+      `<div class="card"><div class="kind">${m.kind} · ${m.backend}${m.backend === 'cognee' ? ' · ' + m.dataset : ''}</div>${esc(m.text)}</div>`).join('') +
+      `<h3 style="margin:16px 0 8px">Recent recalls</h3>` + (recalls.map(r =>
+      `<div class="card"><div class="kind">recall · ${r.backend}</div><b>${esc(r.question)}</b><ul class="ev">${(r.answers || []).map(a => `<li>${esc(a).slice(0, 400)}</li>`).join('') || '<li>nothing useful: item stays held</li>'}</ul></div>`).join('') || '<div class="empty">No recalls yet.</div>');
+  } else {
+    $('tab-body').innerHTML = `<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:12px">` + Object.entries(S.firm.projects).map(([k, p]) => {
+      const pol = p.effective_policy;
+      return `<div class="proj"><h3>${p.name} <span class="pill">${k}</span></h3><div class="kv">
+        <div>Client</div><div>${p.client ? S.firm.clients[p.client].name : '-'}</div>
+        <div>Billable</div><div>${pol.billable ? 'yes' : 'no'}</div>
+        ${pol.po_cap_gbp ? `<div>PO cap</div><div>${p.po_number} · ${gbp(pol.po_cap_gbp)}</div>` : ''}
+        <div>Confidence ≥</div><div>${pol.confidence_threshold}</div>
+        <div>Match signals</div><div class="mono">${esc([...(p.match.domains || []), ...(p.match.channels || []), ...(p.match.folders || []), ...(p.match.files || [])].join(' · '))}</div>
+        <div>Not-billable threads</div><div class="mono">${esc((p.non_billable_threads || []).join(', ') || '-')}</div>
+        <div>Assignments</div><div>${p.assignments.map(a => `${first(a.consultant)} · ${a.role} · ${gbp(a.rate || pol.rate_card[a.role])}/h · from ${dlabel(String(a.start))}${a.decision ? ` <span class="pill acc">${a.decision}</span>` : ''}`).join('<br>')}</div>
+      </div></div>`;
+    }).join('') + `</div><h3>Billing policy</h3><table>${Object.entries(S.rules).map(([k, v]) => `<tr><td><span class="pill">${k}</span></td><td>${esc(v)}</td></tr>`).join('')}</table>`;
+  }
+}
+document.querySelectorAll('.tabs button').forEach(b => b.onclick = () => { tab = b.dataset.tab; renderTab(); });
+
+// ---- live agent steps
+function step(cls, ico, html, sub, id) {
+  const log = $('log');
+  if (log.querySelector('.empty')) log.innerHTML = '';
+  const d = document.createElement('div');
+  d.className = 'step ' + cls; if (id) d.id = 's-' + id;
+  d.innerHTML = `<div class="ico">${ico}</div><div class="t">${html}${sub ? `<div class="sub">${sub}</div>` : ''}</div>`;
+  log.appendChild(d); log.scrollTop = log.scrollHeight;
+}
+function describeCall(n, i) {
+  switch (n) {
+    case 'list_activity': return ['📥', `Reading <b>${first(i.consultant)}</b>'s activity for ${i.week}`];
+    case 'recall_memory': return ['🧠', `Asking Cognee: <i>${esc(i.question)}</i>`];
+    case 'propose_time_entry': return ['£', `Bill <b>${i.hours}h</b> · ${pname(i.project)} · ${first(i.consultant)} <span class="pill">${i.rule_id}</span>`];
+    case 'hold_for_review': return ['⏸', `Hold ${i.activity_ids.length} activities <span class="pill warn">${i.rule_id}</span> ${i.project ? pname(i.project) : ''}`];
+    case 'mark_non_billable': return ['∅', `Skip ${i.activity_ids.length} activities <span class="pill">${i.rule_id}</span>`];
+    case 'propose_assignment': return ['👤', `Propose <b>${first(i.consultant)}</b> → ${pname(i.project)} as ${i.role} from ${dlabel(i.from_date)}`];
+    case 'create_invoice': return ['🧾', `Invoice <b>${pname(i.project)}</b> for ${i.period} in Stripe`];
+  }
+  return ['•', n];
+}
+function onResult(ev) {
+  const el = $('s-' + ev.id); if (!el) return;
+  const o = ev.output || {}, sub = el.querySelector('.sub') || el.querySelector('.t').appendChild(Object.assign(document.createElement('div'), {className: 'sub'}));
+  let cls = ev.is_error ? 'bad' : 'ok', txt = '';
+  switch (ev.name) {
+    case 'list_activity': txt = o.activity ? `${o.activity.length} activities` : o.error; cls = o.error ? 'bad' : ''; break;
+    case 'recall_memory': cls = 'mem'; txt = (o.answers || []).length ? '↳ ' + esc(o.answers[0]).slice(0, 220) + ` <span class="pill acc">${o.backend}</span>` : 'nothing useful → stays held'; break;
+    case 'propose_time_entry': txt = o.accepted ? `✓ ${esc(o.line)} · ${gbp(o.amount_gbp)}` + (o.flags?.length ? `<br><span style="color:var(--warn)">${o.flags.map(esc).join('<br>')}</span>` : '') : `✗ rejected by policy: ${esc(o.error)}`; if (!o.accepted && o.overage_hold) cls = 'hold'; break;
+    case 'hold_for_review': cls = 'hold'; txt = o.accepted ? `held ${o.hours.toFixed(1)}h as ${o.hold_id} (${o.type})` : esc(o.error); break;
+    case 'mark_non_billable': cls = o.accepted ? '' : 'bad'; txt = o.accepted ? `${o.hours.toFixed(1)}h non-billable` : `✗ ${esc(o.error)}`; break;
+    case 'propose_assignment': cls = o.accepted ? 'hold' : 'bad'; txt = o.accepted ? `proposal ${o.proposal_id}: ${o.evidence.hours}h over ${o.evidence.days} days → manager` : `✗ ${esc(o.error)}`; break;
+    case 'create_invoice': txt = o.accepted ? `✓ ${o.invoice_id} · ${gbp(o.amount_gbp)} · ${o.lines} lines · finalised &amp; sent` : `✗ ${esc(o.error)}`; break;
+    default: txt = esc(JSON.stringify(o)).slice(0, 200);
+  }
+  el.className = 'step ' + cls; sub.innerHTML = (sub.innerHTML ? sub.innerHTML + '<br>' : '') + txt;
+}
+let refreshTimer = null;
+const refreshSoon = () => { clearTimeout(refreshTimer); refreshTimer = setTimeout(load, 300); };
+
+function runWeek(week) {
+  if (running) return;
+  running = true; setButtons();
+  $('log').innerHTML = ''; $('run-status').textContent = `running ${week}`;
+  const es = new EventSource('/api/run/' + week);
+  es.onmessage = m => {
+    const ev = JSON.parse(m.data);
+    if (ev.type === 'start') step('', '▶', `<b>Run ${ev.week}</b>`, ev.model);
+    else if (ev.type === 'text') step('say', '💬', esc(ev.text).replace(/\n/g, '<br>'));
+    else if (ev.type === 'note') step('say', '…', esc(ev.text));
+    else if (ev.type === 'tool_call') { const [ico, html] = describeCall(ev.name, ev.input); step(ev.name === 'recall_memory' ? 'mem' : '', ico, html, '', ev.id); }
+    else if (ev.type === 'tool_result') { onResult(ev); refreshSoon(); }
+    else if (ev.type === 'error') step('bad', '!', esc(ev.text));
+    else if (ev.type === 'done') { es.close(); running = false; setButtons(); $('run-status').textContent = `${ev.week} done`; load(); }
+  };
+  es.onerror = () => { es.close(); running = false; setButtons(); $('run-status').textContent = 'disconnected'; load(); };
+}
+function setButtons() { ['run-W42', 'run-W43'].forEach(id => $(id).disabled = running); }
+
+async function decide(target, action) {
+  document.querySelectorAll('.card button').forEach(b => b.disabled = true);
+  const r = await (await fetch('/api/decision', {method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({target, action})})).json();
+  if (r.error) alert(r.error);
+  if (r.recovered_gbp) step('ok', '✓', `<b>Approved.</b> ${gbp(r.recovered_gbp)} of held time released and invoiced (${(r.invoices || []).join(', ')})`, r.memory ? '🧠 remembered: ' + esc(r.memory.text) : '');
+  else if (r.memory) step('mem', '🧠', `Decision ${r.decision} saved to config and Cognee`, esc(r.memory.text));
+  load();
+}
+async function markPaid(id) { await fetch(`/api/invoices/${id}/paid`, {method: 'POST'}); load(); }
+async function resetAll() {
+  if (!confirm('Reset ledger, config and decisions? (Stripe test invoices stay in Stripe)')) return;
+  await fetch('/api/reset', {method: 'POST'}); $('log').innerHTML = ''; load();
+}
+load();
+</script>
+</body>
+</html>
