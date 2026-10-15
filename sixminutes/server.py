@@ -71,6 +71,24 @@ async def decide(d: Decision):
     return await decisions.record_decision(d.target, d.action, d.note)
 
 
+class Assignment(BaseModel):
+    consultant: str
+    project: str
+    role: str = ""
+    start: str = ""
+    hours_per_week: int = 10
+
+
+@app.post("/api/assignments")
+async def assign(a: Assignment):
+    return await decisions.assign(a.consultant, a.project, a.role, a.start, a.hours_per_week)
+
+
+@app.post("/api/assignments/end")
+async def unassign(a: Assignment):
+    return await decisions.unassign(a.consultant, a.project)
+
+
 @app.post("/api/invoices/{invoice_id}/paid")
 def paid(invoice_id: str):
     ledger = store.load_ledger()

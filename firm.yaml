@@ -20,6 +20,8 @@ firm:
 consultants:
   priya: { name: Priya Shah, email: priya@northbeam.co, title: Manager }
   sam:   { name: Sam Lee,    email: sam@northbeam.co,   title: Analyst }
+  jordan: { name: Jordan Blake, email: jordan@northbeam.co, title: Partner }
+  alex:  { name: Alex Morgan, email: alex@northbeam.co,  title: Consultant }
 
 clients:
   acme:
@@ -49,6 +51,7 @@ projects:
     non_billable_threads: []     # R3: filled by manager decisions
     assignments:
       - { consultant: priya, role: Manager, hours_per_week: 25, start: 2026-09-01, end: 2026-12-31 }
+      - { consultant: jordan, role: Partner, hours_per_week: 2, start: 2026-09-01, end: 2026-12-31 }
 
   GLX-STRAT:
     name: Globex Strategy

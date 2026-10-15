@@ -3,7 +3,7 @@
 Updates firm.yaml through policy-checked code, writes the decision and its reasons to Cognee, and releases held hours.
 """
 
-from datetime import date
+from datetime import date, timedelta
 
 from . import billing, memory, policy, store
 from .tools import WeekContext, _add_entry
@@ -127,3 +127,63 @@ async def record_decision(target_id: str, action: str, note: str = "") -> dict:
         row = await memory.remember(text, kind="decision")
         result["memory"] = {"text": text, "backend": row["backend"]}
     return result
+
+
+async def assign(consultant: str, project: str, role: str, start: str, hours_per_week: int = 10) -> dict:
+    """Manual assignment from the project board. An open agent proposal for the same pair is approved instead."""
+    firm, ledger = store.load_firm(), store.load_ledger()
+    if consultant not in firm["consultants"] or project not in firm["projects"]:
+        return {"error": "unknown consultant or project"}
+    prop = next((p for p in ledger["proposals"] if p["status"] == "open" and p["consultant"] == consultant
+                 and p["project"] == project), None)
+    if prop:
+        return await record_decision(prop["id"], "approve", note="approved by drag-and-drop on the project board")
+    rate_card = policy.effective_policy(firm, project)["rate_card"]
+    if role not in rate_card:
+        return {"error": f"unknown role {role}; rate card: {list(rate_card)}"}
+    date.fromisoformat(start)
+    if policy.assignment_for(firm, project, consultant, start):
+        return {"error": f"{consultant} is already assigned to {project} on {start}"}
+    decision = {"id": store.next_id(ledger, "D"), "target": f"{consultant}->{project}", "action": "assign",
+                "by": APPROVER, "at": store.now(), "date_label": _date_label(date.today()), "note": "project board"}
+    firm["projects"][project]["assignments"].append({"consultant": consultant, "role": role,
+                                                     "hours_per_week": int(hours_per_week), "start": start,
+                                                     "end": "2026-12-31", "decision": decision["id"]})
+    store.save_firm(firm)
+    ledger["decisions"].append(decision)
+    store.save_ledger(ledger)
+    cons, proj = firm["consultants"][consultant], firm["projects"][project]
+    text = (f"Decision {date.today().isoformat()}: {cons['name']} assigned to {proj['name']} ({project}) as {role} at "
+            f"£{rate_card[role]}/h, {hours_per_week}h/week, from {start} (set by {APPROVER} on the project board).")
+    store.audit("decision", decision=decision["id"], action="assign", consultant=consultant, project=project,
+                role=role, start=start, by=APPROVER)
+    row = await memory.remember(text, kind="decision")
+    return {"decision": decision["id"], "memory": {"text": text, "backend": row["backend"]}}
+
+
+async def unassign(consultant: str, project: str) -> dict:
+    """End an assignment from the project board (from today: later work on the project becomes R7)."""
+    firm, ledger = store.load_firm(), store.load_ledger()
+    today = date.today()
+    asgs = [a for a in firm["projects"][project]["assignments"] if a["consultant"] == consultant
+            and date.fromisoformat(str(a.get("end") or "2099-12-31")) >= today]
+    if not asgs:
+        return {"error": f"{consultant} has no current assignment on {project}"}
+    decision = {"id": store.next_id(ledger, "D"), "target": f"{consultant}->{project}", "action": "unassign",
+                "by": APPROVER, "at": store.now(), "date_label": _date_label(today), "note": "project board"}
+    last_day = today - timedelta(days=1)
+    for a in asgs:
+        if date.fromisoformat(str(a["start"])) > last_day:
+            firm["projects"][project]["assignments"].remove(a)
+        else:
+            a["end"] = last_day.isoformat()
+    store.save_firm(firm)
+    ledger["decisions"].append(decision)
+    store.save_ledger(ledger)
+    cons, proj = firm["consultants"][consultant], firm["projects"][project]
+    text = (f"Decision {today.isoformat()}: {cons['name']} rolled off {proj['name']} ({project}) as of "
+            f"{today.isoformat()} (set by {APPROVER} on the project board). Later work on it is unassigned.")
+    store.audit("decision", decision=decision["id"], action="unassign", consultant=consultant, project=project,
+                by=APPROVER)
+    row = await memory.remember(text, kind="decision")
+    return {"decision": decision["id"], "memory": {"text": text, "backend": row["backend"]}}

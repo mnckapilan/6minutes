@@ -75,13 +75,49 @@ a{color:var(--accent);text-decoration:none} a:hover{text-decoration:underline}
 .proj h3{margin:0 0 6px;font-size:14px}
 .kv{display:grid;grid-template-columns:150px 1fr;gap:2px 12px;font-size:12px}
 .kv div:nth-child(odd){color:var(--muted)}
+.views{display:flex;gap:2px;background:var(--soft);border-radius:9px;padding:3px}
+.views button{border:none;background:transparent;padding:5px 12px;color:var(--muted)}
+.views button.active{background:var(--panel);color:var(--ink);box-shadow:0 1px 2px rgba(16,24,40,.08)}
+[hidden]{display:none!important}
+.board{display:flex;gap:12px;overflow-x:auto;padding-bottom:8px;align-items:flex-start}
+.col{flex:0 0 280px;background:var(--panel);border:1px solid var(--line);border-radius:12px;display:flex;flex-direction:column;transition:border-color .15s, box-shadow .15s}
+.col.bench{background:var(--soft)}
+.col.over{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft)}
+.col-h{padding:12px 14px;border-bottom:1px solid var(--line);cursor:pointer}
+.col-h:hover h3{color:var(--accent)}
+.col-h h3{margin:0;font-size:14px}
+.col-h .why{margin-top:2px}
+.bar{height:6px;background:var(--soft);border-radius:99px;margin-top:8px;overflow:hidden}
+.bar i{display:block;height:100%;background:var(--accent);border-radius:99px}
+.bar.full i{background:var(--warn)}
+.chips{padding:10px;display:flex;flex-direction:column;gap:8px;min-height:90px}
+.chip{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:8px 10px;cursor:grab;display:flex;gap:10px;align-items:center;user-select:none}
+.chip:active{cursor:grabbing}
+.chip.dragging{opacity:.4}
+.chip.ghost{border-style:dashed;background:var(--accent-soft);border-color:#c7c3ff;cursor:pointer}
+.av{width:30px;height:30px;border-radius:50%;display:grid;place-items:center;font-weight:600;font-size:12px;color:#fff;flex:none}
+.chip .nm{font-weight:500}
+.chip .meta{font-size:12px;color:var(--muted)}
+.chip .util{margin-left:auto;text-align:right;font-size:12px;font-variant-numeric:tabular-nums}
+.drophint{color:var(--muted);font-size:12px;text-align:center;padding:10px;border:1px dashed var(--line);border-radius:10px}
+.modal-bg{position:fixed;inset:0;background:rgba(16,24,40,.35);display:grid;place-items:center;z-index:20}
+.modal{background:var(--panel);border-radius:14px;padding:20px;width:380px;max-width:calc(100% - 32px);box-shadow:0 20px 40px rgba(16,24,40,.2)}
+.modal h3{margin:0 0 12px}
+.modal label{display:block;font-size:12px;color:var(--muted);margin:10px 0 4px}
+.modal select,.modal input{width:100%;font:inherit;padding:7px 10px;border:1px solid var(--line);border-radius:8px}
+.detail-h{display:flex;align-items:center;gap:12px;margin-bottom:16px}
+.detail-h h2{margin:0;font-size:22px;letter-spacing:-.02em}
+.dgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:16px}
+.dcols{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:16px;margin-bottom:16px}
+.toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:var(--ink);color:#fff;padding:10px 16px;border-radius:10px;font-size:13px;z-index:30;max-width:640px}
+@media (max-width:1000px){.dgrid{grid-template-columns:repeat(2,1fr)}.dcols{grid-template-columns:1fr}}
 @media (max-width:1000px){.grid{grid-template-columns:1fr}.stats{grid-template-columns:repeat(2,1fr)}}
 </style>
 </head>
 <body>
 <header>
   <div class="logo">6<span>minutes</span></div>
-  <div class="tag">Activity → timesheets → Stripe invoices, inside the firm's billing policy</div>
+  <div class="views"><button data-view="billing" class="active">Billing</button><button data-view="projects">Projects</button></div>
   <div class="grow"></div>
   <span class="badge" id="b-model"></span>
   <span class="badge" id="b-cognee">Cognee</span>
@@ -90,7 +126,17 @@ a{color:var(--accent);text-decoration:none} a:hover{text-decoration:underline}
   <button class="primary" id="run-W43" onclick="runWeek('W43')">Run W43</button>
   <button onclick="resetAll()">Reset</button>
 </header>
-<main>
+<main id="view-projects" hidden>
+  <div id="board-wrap">
+    <div style="display:flex;align-items:baseline;gap:12px;margin-bottom:12px">
+      <h2 style="margin:0;font-size:18px">Staffing board</h2>
+      <span class="why">Drag people onto a project to assign them, or back to People to roll them off. Dashed chips are the agent's staffing proposals; drop the person there to approve.</span>
+    </div>
+    <div class="board" id="board"></div>
+  </div>
+  <div id="project-detail" hidden></div>
+</main>
+<main id="view-billing">
   <div class="stats">
     <div class="stat"><div class="k">Billed</div><div class="v" id="s-billed">£0</div></div>
     <div class="stat"><div class="k">Billable hours</div><div class="v" id="s-hours">0</div></div>
@@ -121,7 +167,7 @@ a{color:var(--accent);text-decoration:none} a:hover{text-decoration:underline}
       <button data-tab="timesheets" class="active">Timesheets</button>
       <button data-tab="audit">Audit trail</button>
       <button data-tab="memory">Memory (Cognee)</button>
-      <button data-tab="projects">Projects &amp; policy</button>
+      <button data-tab="projects">Policy</button>
     </div>
     <div class="body" id="tab-body"></div>
   </section>
@@ -153,7 +199,180 @@ function render() {
   $('s-recovered').textContent = gbp(st.recovered);
   $('s-held').textContent = st.held + 'h';
   $('s-invoiced').textContent = gbp(st.invoiced);
-  renderInbox(); renderInvoices(); renderTab();
+  renderInbox(); renderInvoices(); renderTab(); renderBoard();
+  if (detailKey) renderDetail(detailKey);
+}
+
+// ---- projects view: staffing board + project pages
+let view = 'billing', detailKey = null, dragCons = null, dragFrom = null;
+const COLORS = ['#635bff', '#12805c', '#c4320a', '#0e7090', '#a11043', '#5925dc'];
+const color = c => COLORS[Object.keys(S.firm.consultants).indexOf(c) % COLORS.length];
+const initials = c => S.firm.consultants[c].name.split(' ').map(w => w[0]).join('');
+const today = () => new Date().toISOString().slice(0, 10);
+const current = a => String(a.end || '2099-12-31') >= today();
+const latestWeek = () => [...new Set(S.ledger.entries.map(e => e.week))].sort().pop();
+
+function setView(v) {
+  view = v;
+  document.querySelectorAll('.views button').forEach(b => b.classList.toggle('active', b.dataset.view === v));
+  $('view-billing').hidden = v !== 'billing'; $('view-projects').hidden = v !== 'projects';
+  if (v === 'projects') showDetail(null);
+}
+document.querySelectorAll('.views button').forEach(b => b.onclick = () => setView(b.dataset.view));
+
+function projectStats(k) {
+  const p = S.firm.projects[k], pol = p.effective_policy, es = S.ledger.entries.filter(e => e.project === k);
+  const billed = es.reduce((a, e) => a + e.amount, 0), wk = latestWeek();
+  return {p, pol, es, billed, cap: pol.po_cap_gbp, wk,
+    hoursBy: c => es.filter(e => e.consultant === c && e.week === wk).reduce((a, e) => a + e.hours, 0)};
+}
+
+function chip(c, k, a, hours) {
+  const util = a && a.hours_per_week ? `<div class="util"><b>${hours.toFixed(1)}</b>/${a.hours_per_week}h<div class="meta">this wk</div></div>` : '';
+  return `<div class="chip" draggable="true" data-cons="${c}" data-from="${k || ''}">
+    <div class="av" style="background:${color(c)}">${initials(c)}</div>
+    <div><div class="nm">${S.firm.consultants[c].name}</div>
+    <div class="meta">${a ? `${a.role} · ${gbp(a.rate || S.firm.projects[k].effective_policy.rate_card[a.role])}/h${a.decision ? ` · <span class="pill acc">${a.decision}</span>` : ''}` : S.firm.consultants[c].title}</div></div>${util}</div>`;
+}
+
+function renderBoard() {
+  const cols = Object.entries(S.firm.projects).map(([k, p]) => {
+    const st = projectStats(k), asg = p.assignments.filter(current);
+    const props = S.ledger.proposals.filter(x => x.project === k && x.status === 'open');
+    const pct = st.cap ? Math.min(100, st.billed / st.cap * 100) : 0;
+    return `<div class="col" data-project="${k}">
+      <div class="col-h" onclick="showDetail('${k}')"><h3>${p.name}</h3>
+        <div class="why">${p.client ? S.firm.clients[p.client].name + ' · ' + (p.po_number || '') : 'Non-billable'}</div>
+        ${st.cap ? `<div class="bar ${pct >= 100 ? 'full' : ''}"><i style="width:${pct}%"></i></div><div class="why">${gbp(st.billed)} of ${gbp(st.cap)} PO</div>` : ''}</div>
+      <div class="chips">${asg.map(a => chip(a.consultant, k, a, st.hoursBy(a.consultant))).join('')}
+        ${props.map(x => `<div class="chip ghost" onclick="setView('billing')" title="Open in Needs a decision">
+          <div class="av" style="background:${color(x.consultant)};opacity:.6">${initials(x.consultant)}</div>
+          <div><div class="nm">${first(x.consultant)}? <span class="pill acc">proposed</span></div>
+          <div class="meta">${x.evidence.hours}h unassigned work · drop ${first(x.consultant)} here to approve</div></div></div>`).join('')}
+        ${asg.length || props.length ? '' : '<div class="drophint">Drop a person here</div>'}</div></div>`;
+  });
+  const bench = Object.keys(S.firm.consultants).map(c => {
+    const on = Object.entries(S.firm.projects).filter(([k, p]) => k !== 'INTERNAL' && p.assignments.some(a => a.consultant === c && current(a)));
+    return chip(c, '', null, 0).replace('</div></div>', `</div><div class="meta">${on.length ? on.map(([k, p]) => p.name).join(', ') : '<b>on the bench</b>'}</div></div>`);
+  }).join('');
+  $('board').innerHTML = `<div class="col bench" data-project=""><div class="col-h" style="cursor:default"><h3>People</h3><div class="why">Drag from here onto a project</div></div><div class="chips">${bench}</div></div>` + cols.join('');
+  wireDrag();
+}
+
+function wireDrag() {
+  document.querySelectorAll('#board .chip[draggable]').forEach(el => {
+    el.ondragstart = e => { dragCons = el.dataset.cons; dragFrom = el.dataset.from; el.classList.add('dragging'); e.dataTransfer.effectAllowed = 'move'; };
+    el.ondragend = () => el.classList.remove('dragging');
+  });
+  document.querySelectorAll('#board .col').forEach(col => {
+    col.ondragover = e => { e.preventDefault(); col.classList.add('over'); };
+    col.ondragleave = () => col.classList.remove('over');
+    col.ondrop = e => { e.preventDefault(); col.classList.remove('over'); onDrop(dragCons, dragFrom, col.dataset.project); };
+  });
+}
+
+async function onDrop(c, from, to) {
+  if (!c || from === to) return;
+  if (to === '') {  // back to People: roll off
+    if (!from) return;
+    if (!confirm(`Roll ${first(c)} off ${pname(from)} from today? Later work on it will be held as unassigned (R7).`)) return;
+    return post('/api/assignments/end', {consultant: c, project: from});
+  }
+  const p = S.firm.projects[to];
+  if (p.assignments.some(a => a.consultant === c && current(a))) return toast(`${first(c)} is already on ${p.name}`);
+  const prop = S.ledger.proposals.find(x => x.project === to && x.consultant === c && x.status === 'open');
+  if (prop) {
+    if (!confirm(`Approve the agent's proposal: add ${first(c)} to ${p.name} as ${prop.role} from ${dlabel(prop.from_date)}? Held hours will be billed.`)) return;
+    return post('/api/assignments', {consultant: c, project: to});
+  }
+  openAssignModal(c, to);
+}
+
+function openAssignModal(c, k) {
+  const pol = S.firm.projects[k].effective_policy, title = S.firm.consultants[c].title;
+  const bg = document.createElement('div'); bg.className = 'modal-bg';
+  bg.innerHTML = `<div class="modal"><h3>Assign ${S.firm.consultants[c].name} to ${pname(k)}</h3>
+    <label>Role</label><select id="m-role">${Object.entries(pol.rate_card).map(([r, rate]) => `<option value="${r}" ${r === title ? 'selected' : ''}>${r} · ${gbp(rate)}/h</option>`).join('')}</select>
+    <label>From</label><input id="m-start" type="date" value="2026-10-12">
+    <label>Allocated hours / week</label><input id="m-hours" type="number" value="10" min="1" max="50">
+    <div class="actions" style="display:flex;gap:8px;margin-top:16px;justify-content:flex-end">
+      <button onclick="this.closest('.modal-bg').remove()">Cancel</button>
+      <button class="primary" id="m-ok">Assign</button></div></div>`;
+  document.body.appendChild(bg);
+  bg.onclick = e => { if (e.target === bg) bg.remove(); };
+  $('m-ok').onclick = async () => {
+    const body = {consultant: c, project: k, role: $('m-role').value, start: $('m-start').value, hours_per_week: +$('m-hours').value};
+    bg.remove(); await post('/api/assignments', body);
+  };
+}
+
+async function post(url, body) {
+  const r = await (await fetch(url, {method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify(body)})).json();
+  if (r.error) toast('✗ ' + r.error);
+  else if (r.recovered_gbp) toast(`✓ Approved: ${gbp(r.recovered_gbp)} of held time billed · saved to config & Cognee`);
+  else if (r.memory) toast('✓ Saved to firm.yaml and Cognee: ' + r.memory.text.replace(/^Decision [\d-]+: /, ''));
+  await load();
+  return r;
+}
+
+function toast(msg) {
+  const t = document.createElement('div'); t.className = 'toast'; t.textContent = msg;
+  document.body.appendChild(t); setTimeout(() => t.remove(), 4500);
+}
+
+function showDetail(k) {
+  detailKey = k;
+  $('board-wrap').hidden = !!k; $('project-detail').hidden = !k;
+  if (k) renderDetail(k);
+}
+
+function renderDetail(k) {
+  const st = projectStats(k), p = st.p, L = S.ledger;
+  const holds = L.holds.filter(h => h.project === k);
+  const invs = L.invoices.filter(i => i.project === k);
+  const asg = p.assignments;
+  const weeks = [...new Set(st.es.map(e => e.week))].sort();
+  $('project-detail').innerHTML = `
+    <div class="detail-h"><button onclick="showDetail(null)">← Board</button>
+      <h2>${p.name}</h2><span class="pill">${k}</span>
+      <span class="why">${p.client ? S.firm.clients[p.client].name + ' · ' + (p.po_number || '') : 'Internal · non-billable'}</span></div>
+    <div class="dgrid">
+      <div class="stat"><div class="k">Billed to date</div><div class="v">${gbp(st.billed)}</div></div>
+      <div class="stat"><div class="k">PO cap</div><div class="v">${st.cap ? gbp(st.cap) : '-'}</div>${st.cap ? `<div class="bar ${st.billed >= st.cap ? 'full' : ''}"><i style="width:${Math.min(100, st.billed / st.cap * 100)}%"></i></div>` : ''}</div>
+      <div class="stat"><div class="k">Hours billed</div><div class="v">${st.es.reduce((a, e) => a + e.hours, 0).toFixed(1)}</div></div>
+      <div class="stat"><div class="k">Open holds</div><div class="v">${holds.filter(h => h.status === 'open').reduce((a, h) => a + h.hours, 0).toFixed(1)}h</div></div>
+    </div>
+    <div class="dcols">
+      <section class="panel"><h2>Team</h2><div class="body"><table>
+        <tr><th>Person</th><th>Role</th><th class="num">Rate</th><th>Dates</th>${weeks.map(w => `<th class="num">${w}</th>`).join('')}<th class="num">Alloc/wk</th></tr>
+        ${asg.map(a => `<tr><td>${S.firm.consultants[a.consultant].name}${a.decision ? ` <span class="pill acc">${a.decision}</span>` : ''}</td><td>${a.role}</td>
+          <td class="num">${gbp(a.rate || st.pol.rate_card[a.role])}</td><td class="why">${dlabel(String(a.start))} → ${dlabel(String(a.end || '2099-12-31'))}</td>
+          ${weeks.map(w => { const h = st.es.filter(e => e.consultant === a.consultant && e.week === w).reduce((s, e) => s + e.hours, 0); return `<td class="num" style="${a.hours_per_week && h > a.hours_per_week ? 'color:var(--warn);font-weight:600' : ''}">${h.toFixed(1)}</td>`; }).join('')}
+          <td class="num">${a.hours_per_week || '-'}</td></tr>`).join('')}
+      </table></div></section>
+      <section class="panel"><h2>Policy (firm → client → project)</h2><div class="body"><div class="kv">
+        <div>Rate card</div><div>${Object.entries(st.pol.rate_card).map(([r, v]) => `${r} ${gbp(v)}`).join(' · ')}</div>
+        <div>Rounding</div><div>${st.pol.rounding_hours}h · max ${st.pol.max_hours_per_day}h/day</div>
+        <div>Confidence ≥</div><div>${st.pol.confidence_threshold}</div>
+        <div>Match signals</div><div class="mono">${esc([...(p.match.domains || []), ...(p.match.channels || []), ...(p.match.folders || []), ...(p.match.files || [])].join(' · '))}</div>
+        <div>Not-billable threads</div><div class="mono">${esc((p.non_billable_threads || []).join(', ') || '-')}</div>
+      </div></div></section>
+    </div>
+    <section class="panel" style="margin-bottom:16px"><h2>Time entries <span class="count">${st.es.length}</span></h2><div class="body">${st.es.length ? `<table>
+      <tr><th>Week</th><th>Day</th><th>Person</th><th class="num">Hours</th><th class="num">Amount</th><th>Rule</th><th>Why</th><th>Invoice</th></tr>
+      ${st.es.map(e => `<tr><td>${e.week}</td><td>${e.days.map(dlabel).join(', ')}</td><td>${first(e.consultant)} <span class="why">${e.role}</span></td>
+        <td class="num">${e.hours.toFixed(1)}</td><td class="num">${gbp(e.amount)}</td>
+        <td><span class="pill ok">${e.rule_id}</span>${e.decision_ref ? ` <span class="pill acc">${e.decision_ref}</span>` : ''}</td>
+        <td class="why">${esc(e.reason)}${e.decision_note ? ' · <b>' + esc(e.decision_note) + '</b>' : ''}</td>
+        <td class="mono">${e.invoice_id ? esc(e.invoice_id.slice(0, 14)) : '<span class="pill">pending</span>'}</td></tr>`).join('')}</table>` : '<div class="empty">No time billed yet.</div>'}</div></section>
+    <div class="dcols">
+      <section class="panel"><h2>Holds &amp; guardrails <span class="count">${holds.length}</span></h2><div class="body">${holds.map(h => `<div class="card ${h.type === 'po_cap' ? 'cap' : ''}">
+        <div class="kind">${h.rule} · ${h.type} · ${first(h.consultant)} · ${h.status}</div>${esc(h.reason)}<div class="why">${h.hours.toFixed(1)}h · ${h.week}</div></div>`).join('') || '<div class="empty">None.</div>'}</div></section>
+      <section class="panel"><h2>Invoices <span class="count">${invs.length}</span></h2><div class="body">${invs.length ? `<table>${invs.map(i => `<tr>
+        <td class="mono">${i.dashboard_url ? `<a href="${i.dashboard_url}" target="_blank">${esc(i.number || i.id.slice(0, 14))}</a>` : esc(i.id.slice(0, 14))}</td>
+        <td>${i.period}${i.memo ? ` <span class="why">${esc(i.memo)}</span>` : ''}</td><td class="num">${gbp(i.amount)}</td>
+        <td><span class="pill ${i.status === 'paid' ? 'ok' : 'acc'}">${i.status}</span></td></tr>`).join('')}</table>` : '<div class="empty">No invoices yet.</div>'}</div></section>
+    </div>`;
 }
 
 function renderInbox() {
