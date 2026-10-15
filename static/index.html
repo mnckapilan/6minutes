@@ -110,6 +110,34 @@ a{color:var(--accent);text-decoration:none} a:hover{text-decoration:underline}
 .dgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:16px}
 .dcols{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:16px;margin-bottom:16px}
 .toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:var(--ink);color:#fff;padding:10px 16px;border-radius:10px;font-size:13px;z-index:30;max-width:640px}
+.feed-top{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:12px}
+.seg{display:flex;gap:2px;background:var(--soft);border-radius:9px;padding:3px}
+.seg button{border:none;background:transparent;padding:4px 10px;font-size:13px;color:var(--muted)}
+.seg button.active{background:var(--panel);color:var(--ink);box-shadow:0 1px 2px rgba(16,24,40,.08)}
+.fsum{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px}
+.fsum .pill{font-size:12px;padding:3px 10px}
+.day{margin-bottom:14px}
+.day-h{display:flex;justify-content:space-between;font-size:12px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.04em;padding:6px 4px}
+.item{display:grid;grid-template-columns:48px 28px minmax(0,1fr) 60px 150px 200px;gap:10px;align-items:center;padding:9px 10px;background:var(--panel);border:1px solid var(--line);border-radius:10px;margin-bottom:6px}
+.item.st-held{border-left:3px solid var(--warn)} .item.st-billed{border-left:3px solid var(--ok)} .item.st-non_billable{border-left:3px solid #98a2b3} .item.st-pending{border-left:3px dashed var(--line)}
+.item .tm{font-family:var(--mono);font-size:12px;color:var(--muted)}
+.item .kico{width:28px;height:28px;border-radius:8px;display:grid;place-items:center;background:var(--soft);font-size:14px}
+.item .ttl{font-weight:500;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.item .mt{font-size:12px;color:var(--muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.item .mins{text-align:right;font-variant-numeric:tabular-nums;font-size:13px}
+.ptag{display:inline-flex;align-items:center;gap:6px;font-size:12px;padding:3px 9px;border-radius:99px;background:var(--accent-soft);color:var(--accent);max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.ptag.dim{background:var(--soft);color:var(--muted)}
+.ptag i{width:7px;height:7px;border-radius:50%;background:currentColor;flex:none}
+.disp{font-size:12px;line-height:1.3}
+.disp b{display:block}
+.who{color:var(--accent);cursor:pointer;font-weight:500}
+.pgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:12px}
+.pcard{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:16px;cursor:pointer}
+.pcard:hover{border-color:var(--accent)}
+.prof-h{display:flex;align-items:center;gap:14px;margin-bottom:16px}
+.prof-h .av{width:52px;height:52px;font-size:18px}
+.modal textarea{width:100%;font:inherit;padding:7px 10px;border:1px solid var(--line);border-radius:8px;min-height:60px}
+@media (max-width:1000px){.item{grid-template-columns:44px 28px minmax(0,1fr) 56px;}.item .ptag,.item .disp{grid-column:3/-1}}
 @media (max-width:1000px){.dgrid{grid-template-columns:repeat(2,1fr)}.dcols{grid-template-columns:1fr}}
 @media (max-width:1000px){.grid{grid-template-columns:1fr}.stats{grid-template-columns:repeat(2,1fr)}}
 </style>
@@ -117,7 +145,7 @@ a{color:var(--accent);text-decoration:none} a:hover{text-decoration:underline}
 <body>
 <header>
   <div class="logo">6<span>minutes</span></div>
-  <div class="views"><button data-view="billing" class="active">Billing</button><button data-view="projects">Projects</button></div>
+  <div class="views"><button data-view="billing" class="active">Billing</button><button data-view="activity">Activity</button><button data-view="projects">Projects</button><button data-view="people">People</button></div>
   <div class="grow"></div>
   <span class="badge" id="b-model"></span>
   <span class="badge" id="b-cognee">Cognee</span>
@@ -126,6 +154,17 @@ a{color:var(--accent);text-decoration:none} a:hover{text-decoration:underline}
   <button class="primary" id="run-W43" onclick="runWeek('W43')">Run W43</button>
   <button onclick="resetAll()">Reset</button>
 </header>
+<main id="view-activity" hidden>
+  <div class="feed-top">
+    <h2 style="margin:0;font-size:18px">Activity feed</h2>
+    <span class="why">What the agent reads: consultants' emails, calls, Teams and document edits (mock), tagged with where each one ended up.</span>
+  </div>
+  <div class="feed-top">
+    <div class="seg" id="f-week"></div><div class="seg" id="f-cons"></div><div class="seg" id="f-kind"></div><div class="seg" id="f-disp"></div>
+  </div>
+  <div id="feed"></div>
+</main>
+<main id="view-people" hidden><div id="people"></div></main>
 <main id="view-projects" hidden>
   <div id="board-wrap">
     <div style="display:flex;align-items:baseline;gap:12px;margin-bottom:12px">
@@ -201,6 +240,8 @@ function render() {
   $('s-invoiced').textContent = gbp(st.invoiced);
   renderInbox(); renderInvoices(); renderTab(); renderBoard();
   if (detailKey) renderDetail(detailKey);
+  if (view === 'activity' || (view === 'people' && profile)) loadFeed();
+  else if (view === 'people') renderPeople();
 }
 
 // ---- projects view: staffing board + project pages
@@ -215,8 +256,10 @@ const latestWeek = () => [...new Set(S.ledger.entries.map(e => e.week))].sort().
 function setView(v) {
   view = v;
   document.querySelectorAll('.views button').forEach(b => b.classList.toggle('active', b.dataset.view === v));
-  $('view-billing').hidden = v !== 'billing'; $('view-projects').hidden = v !== 'projects';
+  for (const n of ['billing', 'activity', 'projects', 'people']) $('view-' + n).hidden = v !== n;
   if (v === 'projects') showDetail(null);
+  if (v === 'activity') loadFeed();
+  if (v === 'people') { profile = null; renderPeople(); }
 }
 document.querySelectorAll('.views button').forEach(b => b.onclick = () => setView(b.dataset.view));
 
@@ -263,6 +306,7 @@ function wireDrag() {
   document.querySelectorAll('#board .chip[draggable]').forEach(el => {
     el.ondragstart = e => { dragCons = el.dataset.cons; dragFrom = el.dataset.from; el.classList.add('dragging'); e.dataTransfer.effectAllowed = 'move'; };
     el.ondragend = () => el.classList.remove('dragging');
+    el.onclick = () => openProfile(el.dataset.cons);
   });
   document.querySelectorAll('#board .col').forEach(col => {
     col.ondragover = e => { e.preventDefault(); col.classList.add('over'); };
@@ -416,7 +460,7 @@ function renderInvoices() {
   $('invoices').innerHTML = inv.length ? `<table><tr><th>Invoice</th><th>Project</th><th>Period</th><th class="num">Amount</th><th>Status</th><th></th></tr>` +
     inv.map(i => `<tr><td class="mono">${i.dashboard_url ? `<a href="${i.dashboard_url}" target="_blank">${esc(i.number || i.id.slice(0, 14))}</a>` : esc(i.id.slice(0, 14))}</td>
       <td>${pname(i.project)}${i.memo ? `<div class="why">${esc(i.memo)}</div>` : ''}</td><td>${i.period}</td>
-      <td class="num">${gbp(i.amount)}</td><td><span class="pill ${i.status === 'paid' ? 'ok' : 'acc'}">${i.status}</span></td>
+      <td class="num">${gbp(i.amount)}${i.credited ? `<div class="why" style="color:var(--warn)">−${gbp(i.credited)} credited</div>` : ''}</td><td><span class="pill ${i.status === 'paid' ? 'ok' : 'acc'}">${i.status}</span></td>
       <td>${i.status !== 'paid' ? `<button class="small" onclick="markPaid('${i.id}')">Mark paid</button>` : (i.hosted_invoice_url ? `<a href="${i.hosted_invoice_url}" target="_blank">view</a>` : '')}</td></tr>`).join('') + '</table>'
     : '<div class="empty">No invoices yet.</div>';
 }
@@ -470,6 +514,154 @@ function renderTab() {
   }
 }
 document.querySelectorAll('.tabs button').forEach(b => b.onclick = () => { tab = b.dataset.tab; renderTab(); });
+
+
+// ---- activity feed + people profiles
+const FEED = {};
+let fWeek = 'W42', fCons = 'all', fKind = 'all', fDisp = 'all', profile = null, pWeek = 'W42';
+const KIND = {call: ['📞', 'Call'], email: ['✉️', 'Email'], teams: ['💬', 'Teams'], doc_edit: ['📝', 'Doc edit']};
+const DLABEL = {billed: 'Billed', held: 'Held', non_billable: 'Non-billable', pending: 'Not processed', released: 'Released', ignored: 'Ignored'};
+
+async function loadFeed() {
+  const weeks = profile ? [pWeek] : [fWeek];
+  await Promise.all(weeks.map(async w => FEED[w] = await (await fetch('/api/activity/' + w)).json()));
+  if (view === 'activity') renderFeedView(); else if (profile) renderProfile();
+}
+
+function seg(id, opts, cur, on) {
+  $(id).innerHTML = opts.map(([v, l]) => `<button class="${v === cur ? 'active' : ''}" data-v="${v}">${l}</button>`).join('');
+  $(id).querySelectorAll('button').forEach(b => b.onclick = () => on(b.dataset.v));
+}
+
+function renderFeedView() {
+  seg('f-week', [['W42', 'W42 · 12–16 Oct'], ['W43', 'W43 · 19–23 Oct']], fWeek, v => { fWeek = v; loadFeed(); });
+  const people = [...new Set((FEED[fWeek] || []).map(a => a.consultant))];
+  seg('f-cons', [['all', 'Everyone'], ...people.map(c => [c, first(c)])], fCons, v => { fCons = v; renderFeedView(); });
+  seg('f-kind', [['all', 'All kinds'], ...Object.entries(KIND).map(([k, [i, l]]) => [k, i + ' ' + l])], fKind, v => { fKind = v; renderFeedView(); });
+  seg('f-disp', [['all', 'Any status'], ['billed', 'Billed'], ['held', 'Held'], ['non_billable', 'Non-billable'], ['pending', 'Not processed']], fDisp, v => { fDisp = v; renderFeedView(); });
+  const items = (FEED[fWeek] || []).filter(a => (fCons === 'all' || a.consultant === fCons) && (fKind === 'all' || a.kind === fKind)
+    && (fDisp === 'all' || a.disposition.type === fDisp));
+  $('feed').innerHTML = feedHTML(items, fCons === 'all');
+}
+
+function feedHTML(items, showWho) {
+  if (!items.length) return '<div class="empty">No activity matches.</div>';
+  const sum = t => (items.filter(a => a.disposition.type === t).reduce((s, a) => s + a.minutes, 0) / 60).toFixed(1);
+  const head = `<div class="fsum"><span class="pill">${items.length} activities · ${(items.reduce((s, a) => s + a.minutes, 0) / 60).toFixed(1)}h</span>
+    <span class="pill ok">billed ${sum('billed')}h</span><span class="pill warn">held ${sum('held')}h</span>
+    <span class="pill">non-billable ${sum('non_billable')}h</span>${items.some(a => a.disposition.type === 'pending') ? `<span class="pill">not processed ${sum('pending')}h</span>` : ''}</div>`;
+  const days = {};
+  items.slice().sort((a, b) => a.ts.localeCompare(b.ts)).forEach(a => (days[a.ts.slice(0, 10)] ||= []).push(a));
+  return head + Object.entries(days).map(([d, list]) => `<div class="day"><div class="day-h"><span>${new Date(d + 'T00:00').toLocaleDateString('en-GB', {weekday: 'long', day: 'numeric', month: 'short'})}</span>
+    <span>${(list.reduce((s, a) => s + a.minutes, 0) / 60).toFixed(1)}h</span></div>${list.map(a => itemHTML(a, showWho)).join('')}</div>`).join('');
+}
+
+function itemHTML(a, showWho) {
+  const [ico] = KIND[a.kind] || ['•'], d = a.disposition;
+  const meta = [];
+  if (showWho) meta.push(`<span class="who" onclick="openProfile('${a.consultant}')">${first(a.consultant)}</span>`);
+  if (a.participants) meta.push(esc(a.participants.filter(p => !p.startsWith(a.consultant + '@')).join(', ')));
+  if (a.channel) meta.push(esc(a.channel) + (a.messages ? ` · ${a.messages} messages` : ''));
+  if (a.path) meta.push(`<span class="mono">${esc(a.path)}</span>` + (a.edits ? ` · ${a.edits} edits` : ''));
+  if (a.thread_id) meta.push(`<span class="mono">${esc(a.thread_id)}</span>`);
+  const proj = d.project || (d.type === 'non_billable' ? null : Object.keys(a.signals).find(k => k !== 'INTERNAL'));
+  const tag = d.type === 'non_billable' ? `<span class="ptag dim"><i></i>${Object.keys(a.signals).includes('INTERNAL') && Object.keys(a.signals).length === 1 ? 'Internal' : 'Not billable'}</span>`
+    : proj ? `<span class="ptag ${d.project ? '' : 'dim'}" title="${esc((a.signals[proj] || []).join(' · '))}"><i></i>${pname(proj)}${d.project ? '' : ' ?'}</span>`
+    : '<span class="ptag dim"><i></i>no match</span>';
+  const inv = d.invoice_id && S.ledger.invoices.find(i => i.id === d.invoice_id);
+  const disp = {
+    billed: `<span class="pill ok">Billed · ${d.id}</span> ${d.decision ? `<span class="pill acc">${d.decision}</span>` : ''}${d.overage ? ` <span class="pill warn">part over PO cap</span>` : ''}<br>${inv ? (inv.dashboard_url ? `<a href="${inv.dashboard_url}" target="_blank">${esc(inv.number || inv.id.slice(0, 14))}</a>` : esc(inv.id.slice(0, 14))) : '<span class="why">not invoiced yet</span>'}`,
+    held: `<span class="pill warn">Held · ${d.id} · ${d.rule}</span><br><span class="why">${esc(d.reason || '').slice(0, 60)}</span>`,
+    non_billable: `<span class="pill">Non-billable · ${d.rule}</span><br><span class="why">${esc(d.reason || '').slice(0, 60)}</span>`,
+    pending: '<span class="pill">Not processed</span>',
+  }[d.type] || `<span class="pill">${DLABEL[d.type] || d.type} · ${d.id}</span>`;
+  return `<div class="item st-${d.type}" title="${esc(d.reason || '')}"><div class="tm">${a.ts.slice(11, 16)}</div><div class="kico">${ico}</div>
+    <div style="min-width:0"><div class="ttl">${esc(a.title)}</div><div class="mt">${meta.join(' · ')}</div></div>
+    <div class="mins">${a.minutes}m</div><div>${tag}</div><div class="disp">${disp}</div></div>`;
+}
+
+function renderPeople() {
+  const wk = latestWeek();
+  $('people').innerHTML = `<div class="feed-top"><h2 style="margin:0;font-size:18px">People</h2><span class="why">Click someone to see their billables and activity.</span></div><div class="pgrid">` +
+    Object.entries(S.firm.consultants).map(([c, p]) => {
+      const on = Object.entries(S.firm.projects).filter(([k, pr]) => pr.assignments.some(a => a.consultant === c && current(a)));
+      const h = S.ledger.entries.filter(e => e.consultant === c && e.week === wk).reduce((s, e) => s + e.hours, 0);
+      return `<div class="pcard" onclick="openProfile('${c}')"><div style="display:flex;gap:12px;align-items:center">
+        <div class="av" style="background:${color(c)}">${initials(c)}</div><div><b>${p.name}</b><div class="why">${p.title} · ${gbp(S.firm.firm.policy.rate_card[p.title])}/h</div></div></div>
+        <div class="why" style="margin-top:10px">${on.map(([k, pr]) => pr.name).join(' · ') || 'On the bench'}</div>
+        <div style="margin-top:6px;font-size:13px"><b>${h.toFixed(1)}h</b> billed ${wk || ''}</div></div>`;
+    }).join('') + '</div>';
+}
+
+function openProfile(c) { profile = c; if (view !== 'people') setView('people'); profile = c; loadFeed(); }
+
+function renderProfile() {
+  const c = profile, p = S.firm.consultants[c], L = S.ledger;
+  const es = L.entries.filter(e => e.consultant === c), sk = L.skipped.filter(s => s.consultant === c);
+  const hd = L.holds.filter(h => h.consultant === c && h.status === 'open' && h.type !== 'po_cap');
+  const asg = Object.entries(S.firm.projects).flatMap(([k, pr]) => pr.assignments.filter(a => a.consultant === c).map(a => ({...a, k})));
+  const weeks = [...new Set(es.map(e => e.week))].sort();
+  const feed = (FEED[pWeek] || []).filter(a => a.consultant === c);
+  $('people').innerHTML = `
+    <div class="prof-h"><button onclick="profile=null;renderPeople()">← People</button>
+      <div class="av" style="background:${color(c)}">${initials(c)}</div>
+      <div><h2 style="margin:0;font-size:22px">${p.name}</h2><div class="why">${p.title} · ${esc(p.email)} · standard rate ${gbp(S.firm.firm.policy.rate_card[p.title])}/h</div></div></div>
+    <div class="dgrid">
+      <div class="stat"><div class="k">Billed hours</div><div class="v">${es.reduce((s, e) => s + e.hours, 0).toFixed(1)}</div></div>
+      <div class="stat"><div class="k">Billed value</div><div class="v">${gbp(es.reduce((s, e) => s + e.amount, 0))}</div></div>
+      <div class="stat"><div class="k">Non-billable</div><div class="v">${sk.reduce((s, x) => s + x.hours, 0).toFixed(1)}h</div></div>
+      <div class="stat"><div class="k">Held for review</div><div class="v">${hd.reduce((s, h) => s + h.hours, 0).toFixed(1)}h</div></div>
+    </div>
+    <div class="dcols">
+      <section class="panel"><h2>Assignments</h2><div class="body"><table><tr><th>Project</th><th>Role</th><th class="num">Rate</th><th>Dates</th>${weeks.map(w => `<th class="num">${w}</th>`).join('')}<th class="num">Alloc/wk</th></tr>
+        ${asg.map(a => `<tr><td>${pname(a.k)}${a.decision ? ` <span class="pill acc">${a.decision}</span>` : ''}</td><td>${a.role}</td><td class="num">${a.k === 'INTERNAL' ? '-' : gbp(a.rate || S.firm.projects[a.k].effective_policy.rate_card[a.role])}</td>
+          <td class="why">${dlabel(String(a.start))} → ${dlabel(String(a.end || '2099-12-31'))}</td>
+          ${weeks.map(w => { const h = es.filter(e => e.project === a.k && e.week === w).reduce((s, e) => s + e.hours, 0); return `<td class="num" style="${a.hours_per_week && h > a.hours_per_week ? 'color:var(--warn);font-weight:600' : ''}">${h ? h.toFixed(1) : '-'}</td>`; }).join('')}
+          <td class="num">${a.hours_per_week || '-'}</td></tr>`).join('') || '<tr><td colspan="9" class="why">No assignments.</td></tr>'}</table></div></section>
+      <section class="panel"><h2>Held for review <span class="count">${hd.length}</span></h2><div class="body">${hd.map(h => `<div class="card"><div class="kind">${h.rule} · ${h.project ? pname(h.project) : ''} · ${h.week}</div>${esc(h.reason)}<div class="why">${h.hours.toFixed(1)}h · ${h.activity_ids.length} activities · a manager decides in Billing → Needs a decision</div></div>`).join('') || '<div class="empty">Nothing held.</div>'}</div></section>
+    </div>
+    <section class="panel" style="margin-bottom:16px"><h2>Billables <span class="count">${es.length}</span><span class="why" style="font-weight:400">· edit or write down your time; changes are policy-checked, and invoiced lines are corrected with a Stripe credit note</span></h2><div class="body">${es.length ? `<table>
+      <tr><th>Week</th><th>Day</th><th>Project</th><th class="num">Hours</th><th class="num">Amount</th><th>Rule</th><th>Why</th><th>Invoice</th><th></th></tr>
+      ${es.map(e => `<tr><td>${e.week}</td><td>${e.days.map(dlabel).join(', ')}</td><td>${pname(e.project)}</td>
+        <td class="num">${e.hours.toFixed(1)}${(e.adjustments || []).length ? ` <span class="pill warn" title="${esc(e.adjustments.map(x => `${x.by}: ${x.reason}`).join(' | '))}">edited</span>` : ''}</td>
+        <td class="num">${gbp(e.amount)}</td><td><span class="pill ok">${e.rule_id}</span>${e.decision_ref ? ` <span class="pill acc">${e.decision_ref}</span>` : ''}</td>
+        <td class="why">${esc(e.reason)}${e.decision_note ? ' · <b>' + esc(e.decision_note) + '</b>' : ''}${(e.adjustments || []).map(x => `<br><span style="color:var(--warn)">${x.moved_to ? `moved ${x.moved_from} → ${x.moved_to}` : `${x.from_hours}h → ${x.to_hours}h`}${x.credit_note ? ` · credit note ${esc(x.credit_note.slice(0, 14))}` : ''} · ${esc(x.reason)}</span>`).join('')}</td>
+        <td>${e.invoice_id ? '<span class="pill ok">invoiced</span>' : '<span class="pill">pending</span>'}</td>
+        <td style="white-space:nowrap"><button class="small" onclick="editEntry('${e.id}')">Edit</button> <button class="small" onclick="removeEntry('${e.id}')">${e.invoice_id ? 'Credit' : 'Remove'}</button></td></tr>`).join('')}</table>` : '<div class="empty">No billables yet. Run a week from Billing.</div>'}</div></section>
+    <section class="panel"><h2>Activity <span class="count">${feed.length}</span><span class="grow"></span><span class="seg" id="p-week"></span></h2><div class="body">${feedHTML(feed, false)}</div></section>`;
+  seg('p-week', [['W42', 'W42'], ['W43', 'W43']], pWeek, v => { pWeek = v; loadFeed(); });
+}
+
+function editEntry(id) {
+  const e = S.ledger.entries.find(x => x.id === id);
+  const projects = Object.entries(S.firm.projects).filter(([k, p]) => p.client);
+  const bg = document.createElement('div'); bg.className = 'modal-bg';
+  bg.innerHTML = `<div class="modal"><h3>Edit ${e.id}</h3><div class="why">${pname(e.project)} · ${e.days.map(dlabel).join(', ')} · ${e.activity_ids.length} activities${e.invoice_id ? ' · <b>invoiced</b>: a write-down issues a Stripe credit note' : ''}</div>
+    <label>Hours (can only go down: the evidence caps it at ${e.hours.toFixed(1)}h)</label><input id="e-hours" type="number" step="0.1" min="0" max="${e.hours}" value="${e.hours}">
+    <label>Project</label><select id="e-proj" ${e.invoice_id ? 'disabled' : ''}>${projects.map(([k, p]) => `<option value="${k}" ${k === e.project ? 'selected' : ''}>${p.name}</option>`).join('')}</select>
+    <label>Reason (goes on the audit trail)</label><textarea id="e-reason" placeholder="e.g. part of this was internal prep"></textarea>
+    <div style="display:flex;gap:8px;margin-top:16px;justify-content:flex-end"><button onclick="this.closest('.modal-bg').remove()">Cancel</button><button class="primary" id="e-ok">Save</button></div></div>`;
+  document.body.appendChild(bg);
+  bg.onclick = ev => { if (ev.target === bg) bg.remove(); };
+  $('e-ok').onclick = async () => {
+    const body = {by: S.firm.consultants[e.consultant].name, reason: $('e-reason').value};
+    const h = +$('e-hours').value, pr = $('e-proj').value;
+    if (h !== e.hours) body.hours = h;
+    if (pr !== e.project) body.project = pr;
+    const r = await (await fetch(`/api/entries/${id}/edit`, {method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify(body)})).json();
+    if (r.error) return toast('✗ ' + r.error);
+    bg.remove(); toast('✓ Saved · ' + (r.entry.adjustments || []).slice(-1).map(x => x.credit_note ? 'credit note ' + x.credit_note + ' issued in Stripe' : 'policy check passed').join('')); load();
+  };
+}
+
+async function removeEntry(id) {
+  const e = S.ledger.entries.find(x => x.id === id);
+  const reason = prompt(e.invoice_id ? `Credit ${id} in full (${gbp(e.amount)}) with a Stripe credit note. Reason:` : `Remove ${id} from billing? Its activities go back to review. Reason:`);
+  if (!reason) return;
+  const r = await (await fetch(`/api/entries/${id}/remove`, {method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({by: S.firm.consultants[e.consultant].name, reason})})).json();
+  if (r.error) return toast('✗ ' + r.error);
+  toast(r.credited ? '✓ Credit note issued in Stripe' : `✓ Removed; activities held as ${r.hold}`); load();
+}
 
 // ---- live agent steps
 function step(cls, ico, html, sub, id) {

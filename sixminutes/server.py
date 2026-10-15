@@ -8,7 +8,7 @@ from fastapi.responses import FileResponse
 from pydantic import BaseModel
 from sse_starlette.sse import EventSourceResponse
 
-from . import agent, billing, decisions, memory, policy, store
+from . import agent, billing, decisions, edits, memory, policy, store
 
 app = FastAPI(title="6minutes")
 _run_lock = asyncio.Lock()
@@ -87,6 +87,30 @@ async def assign(a: Assignment):
 @app.post("/api/assignments/end")
 async def unassign(a: Assignment):
     return await decisions.unassign(a.consultant, a.project)
+
+
+@app.get("/api/activity/{week}")
+def activity(week: str):
+    if week not in ("W42", "W43"):
+        raise HTTPException(404, "unknown week")
+    return edits.week_feed(week)
+
+
+class EntryEdit(BaseModel):
+    by: str
+    reason: str
+    hours: float | None = None
+    project: str | None = None
+
+
+@app.post("/api/entries/{entry_id}/edit")
+def edit_entry(entry_id: str, body: EntryEdit):
+    return edits.edit_entry(entry_id, body.by, body.reason, body.hours, body.project)
+
+
+@app.post("/api/entries/{entry_id}/remove")
+def remove_entry(entry_id: str, body: EntryEdit):
+    return edits.remove_entry(entry_id, body.by, body.reason)
 
 
 @app.post("/api/invoices/{invoice_id}/paid")

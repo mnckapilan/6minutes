@@ -100,6 +100,31 @@ def create_invoice(ledger: dict, firm: dict, project_key: str, period: str, entr
     return record
 
 
+def credit_note(inv: dict, description: str, amount: float, reason: str, entry_id: str) -> dict:
+    pence = int(round(amount * 100))
+    if DRY_RUN:
+        cid = f"cn_dry_{uuid.uuid4().hex[:10]}"
+    else:
+        kwargs = {"credit_amount": pence} if inv["status"] == "paid" else {}
+        try:
+            cid = _create_credit_note(inv, description, pence, reason, entry_id, kwargs)
+        except stripe.error.StripeError as e:
+            raise ValueError(f"Stripe refused the credit note: {e.user_message or str(e)[:200]}") from e
+    cn = {"id": cid, "invoice": inv["id"], "amount": amount, "entry": entry_id, "reason": reason,
+          "created": store.now(), "dry_run": DRY_RUN}
+    inv["credited"] = round(inv.get("credited", 0) + amount, 2)
+    store.audit("stripe.credit_note", credit_note=cid, invoice=inv["id"], amount=amount, entry=entry_id, reason=reason)
+    return cn
+
+
+def _create_credit_note(inv, description, pence, reason, entry_id, kwargs) -> str:
+    return stripe.CreditNote.create(
+            invoice=inv["id"], reason="order_change", memo=reason[:500],
+        lines=[{"type": "custom_line_item", "description": description[:500], "quantity": 1, "unit_amount": pence}],
+        metadata={"entry_id": entry_id, "reason": reason[:500], "generated_by": "6minutes"}, **kwargs,
+    ).id
+
+
 def mark_paid(ledger: dict, invoice_id: str) -> dict:
     inv = next(i for i in ledger["invoices"] if i["id"] == invoice_id)
     if not DRY_RUN:
