@@ -148,6 +148,7 @@ a{color:var(--accent);text-decoration:none} a:hover{text-decoration:underline}
   <div class="views"><button data-view="billing" class="active">Billing</button><button data-view="activity">Activity</button><button data-view="projects">Projects</button><button data-view="people">People</button></div>
   <div class="grow"></div>
   <span class="badge" id="b-model"></span>
+  <span class="badge on" id="b-jev" title="TypeSafe JEV decisions model scores every judgment call">JEV</span>
   <span class="badge" id="b-cognee">Cognee</span>
   <span class="badge" id="b-stripe">Stripe</span>
   <button class="primary" id="run-W42" onclick="runWeek('W42')">Run W42</button>
@@ -219,6 +220,7 @@ const gbp = n => '£' + Number(n || 0).toLocaleString('en-GB', {minimumFractionD
 const esc = s => String(s ?? '').replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 const first = c => (S?.firm.consultants[c]?.name || c).split(' ')[0];
 const pname = k => S?.firm.projects[k]?.name || k;
+const jevPill = (p, label = 'JEV') => p == null ? '' : `<span class="pill ${p >= 0.7 ? 'ok' : 'warn'}" title="Calibrated probability from JEV (TypeSafe System One), checked against the project's R6 threshold">${label} ${Number(p).toFixed(2)}</span>`;
 const dlabel = d => new Date(d + 'T00:00').toLocaleDateString('en-GB', {day: 'numeric', month: 'short'});
 
 async function load() {
@@ -406,7 +408,7 @@ function renderDetail(k) {
       <tr><th>Week</th><th>Day</th><th>Person</th><th class="num">Hours</th><th class="num">Amount</th><th>Rule</th><th>Why</th><th>Invoice</th></tr>
       ${st.es.map(e => `<tr><td>${e.week}</td><td>${e.days.map(dlabel).join(', ')}</td><td>${first(e.consultant)} <span class="why">${e.role}</span></td>
         <td class="num">${e.hours.toFixed(1)}</td><td class="num">${gbp(e.amount)}</td>
-        <td><span class="pill ok">${e.rule_id}</span>${e.decision_ref ? ` <span class="pill acc">${e.decision_ref}</span>` : ''}</td>
+        <td><span class="pill ok">${e.rule_id}</span>${e.decision_ref ? ` <span class="pill acc">${e.decision_ref}</span>` : ''} ${e.jev ? jevPill(e.jev.p) : ''}</td>
         <td class="why">${esc(e.reason)}${e.decision_note ? ' · <b>' + esc(e.decision_note) + '</b>' : ''}</td>
         <td class="mono">${e.invoice_id ? esc(e.invoice_id.slice(0, 14)) : '<span class="pill">pending</span>'}</td></tr>`).join('')}</table>` : '<div class="empty">No time billed yet.</div>'}</div></section>
     <div class="dcols">
@@ -430,6 +432,7 @@ function renderInbox() {
       <span class="mono">${esc(ev.files.join(', '))}</span>, ${ev.emails} emails on the project thread.
       Add ${first(p.consultant)} to ${pname(p.project)} as ${p.role} at ${gbp(p.rate)}/h from ${dlabel(p.from_date)}?</div>
       <div class="why">${esc(p.agent_evidence)}</div>
+      ${p.jev ? `<div style="margin-top:6px">${jevPill(p.jev.p_assign, 'JEV assign')} ${jevPill(p.jev.sustained, 'sustained')} <span class="why">not billable ${p.jev.probabilities.not_billable} · needs info ${p.jev.probabilities.needs_info}</span></div>` : ''}
       <div class="actions"><button class="ok small" onclick="decide('${p.id}','approve')">Approve</button>
       <button class="small" onclick="decide('${p.id}','not_billable')">Not billable</button>
       <button class="small" onclick="decide('${p.id}','ignore')">Ignore</button></div></div>`);
@@ -444,7 +447,7 @@ function renderInbox() {
     } else {
       const acts = h.activity_ids.length;
       out.push(`<div class="card"><div class="kind">Held · ${h.rule} · ${first(h.consultant)}${h.project ? ' · ' + pname(h.project) : ''}</div>
-        <div>${esc(h.reason)}</div><div class="why">${h.hours.toFixed(1)}h · ${acts} activities · ${h.week}</div>
+        <div>${esc(h.reason)}</div><div class="why">${h.hours.toFixed(1)}h · ${acts} activities · ${h.week} ${h.jev_internal ? jevPill(h.jev_internal.p, 'JEV internal') : ''}</div>
         <div class="actions"><button class="small" onclick="decide('${h.id}','approve')">Bill it</button>
         <button class="small" onclick="decide('${h.id}','not_billable')">Not billable</button>
         <button class="small" onclick="decide('${h.id}','ignore')">Ignore</button></div></div>`);
@@ -479,7 +482,7 @@ function renderTab() {
       <table><tr><th>Week</th><th>Day</th><th>Project</th><th class="num">Hours</th><th class="num">Amount</th><th>Rule</th><th>Why</th><th>Invoice</th></tr>
       ${es.map(e => `<tr><td>${e.week}</td><td>${e.days.map(dlabel).join(', ')}</td><td>${pname(e.project)}</td>
         <td class="num">${e.hours.toFixed(1)}</td><td class="num">${gbp(e.amount)}</td>
-        <td><span class="pill ok">${e.rule_id}</span> ${e.decision_ref ? `<span class="pill acc">${e.decision_ref}</span>` : ''}</td>
+        <td><span class="pill ok">${e.rule_id}</span> ${e.decision_ref ? `<span class="pill acc">${e.decision_ref}</span>` : ''} ${e.jev ? jevPill(e.jev.p) : ''}</td>
         <td class="why">${esc(e.reason)}${e.decision_note ? ' · <b>' + esc(e.decision_note) + '</b>' : ''}${e.flags.length ? '<br><span style="color:var(--warn)">' + e.flags.map(esc).join('<br>') + '</span>' : ''}</td>
         <td>${e.invoice_id ? '<span class="pill ok">invoiced</span>' : '<span class="pill">pending</span>'}</td></tr>`).join('')}
       ${sk.map(s => `<tr><td>${s.week}</td><td></td><td class="why">non-billable</td><td class="num why">${s.hours.toFixed(1)}</td><td></td><td><span class="pill">${s.rule_id}</span></td><td class="why">${esc(s.reason)}</td><td></td></tr>`).join('')}
@@ -624,7 +627,7 @@ function renderProfile() {
       <tr><th>Week</th><th>Day</th><th>Project</th><th class="num">Hours</th><th class="num">Amount</th><th>Rule</th><th>Why</th><th>Invoice</th><th></th></tr>
       ${es.map(e => `<tr><td>${e.week}</td><td>${e.days.map(dlabel).join(', ')}</td><td>${pname(e.project)}</td>
         <td class="num">${e.hours.toFixed(1)}${(e.adjustments || []).length ? ` <span class="pill warn" title="${esc(e.adjustments.map(x => `${x.by}: ${x.reason}`).join(' | '))}">edited</span>` : ''}</td>
-        <td class="num">${gbp(e.amount)}</td><td><span class="pill ok">${e.rule_id}</span>${e.decision_ref ? ` <span class="pill acc">${e.decision_ref}</span>` : ''}</td>
+        <td class="num">${gbp(e.amount)}</td><td><span class="pill ok">${e.rule_id}</span>${e.decision_ref ? ` <span class="pill acc">${e.decision_ref}</span>` : ''} ${e.jev ? jevPill(e.jev.p) : ''}</td>
         <td class="why">${esc(e.reason)}${e.decision_note ? ' · <b>' + esc(e.decision_note) + '</b>' : ''}${(e.adjustments || []).map(x => `<br><span style="color:var(--warn)">${x.moved_to ? `moved ${x.moved_from} → ${x.moved_to}` : `${x.from_hours}h → ${x.to_hours}h`}${x.credit_note ? ` · credit note ${esc(x.credit_note.slice(0, 14))}` : ''} · ${esc(x.reason)}</span>`).join('')}</td>
         <td>${e.invoice_id ? '<span class="pill ok">invoiced</span>' : '<span class="pill">pending</span>'}</td>
         <td style="white-space:nowrap"><button class="small" onclick="editEntry('${e.id}')">Edit</button> <button class="small" onclick="removeEntry('${e.id}')">${e.invoice_id ? 'Credit' : 'Remove'}</button></td></tr>`).join('')}</table>` : '<div class="empty">No billables yet. Run a week from Billing.</div>'}</div></section>
@@ -691,10 +694,10 @@ function onResult(ev) {
   switch (ev.name) {
     case 'list_activity': txt = o.activity ? `${o.activity.length} activities` : o.error; cls = o.error ? 'bad' : ''; break;
     case 'recall_memory': cls = 'mem'; txt = (o.answers || []).length ? '↳ ' + esc(o.answers[0]).slice(0, 220) + ` <span class="pill acc">${o.backend}</span>` : 'nothing useful → stays held'; break;
-    case 'propose_time_entry': txt = o.accepted ? `✓ ${esc(o.line)} · ${gbp(o.amount_gbp)}` + (o.flags?.length ? `<br><span style="color:var(--warn)">${o.flags.map(esc).join('<br>')}</span>` : '') : `✗ rejected by policy: ${esc(o.error)}`; if (!o.accepted && o.overage_hold) cls = 'hold'; break;
-    case 'hold_for_review': cls = 'hold'; txt = o.accepted ? `held ${o.hours.toFixed(1)}h as ${o.hold_id} (${o.type})` : esc(o.error); break;
+    case 'propose_time_entry': txt = (o.jev ? jevPill(o.jev.p) + ' ' : '') + (o.accepted ? `✓ ${esc(o.line)} · ${gbp(o.amount_gbp)}` + (o.flags?.length ? `<br><span style="color:var(--warn)">${o.flags.map(esc).join('<br>')}</span>` : '') : `✗ rejected by policy: ${esc(o.error)}`); if (!o.accepted && o.overage_hold) cls = 'hold'; break;
+    case 'hold_for_review': cls = 'hold'; txt = o.accepted ? `held ${o.hours.toFixed(1)}h as ${o.hold_id} (${o.type})${o.jev_internal_p != null ? ' · ' + jevPill(o.jev_internal_p, 'JEV internal') : ''}` : esc(o.error); break;
     case 'mark_non_billable': cls = o.accepted === true ? '' : 'bad'; txt = (o.accepted ? `${o.hours.toFixed(1)}h non-billable` : '') + (o.error ? `${o.accepted ? '<br>' : ''}✗ rejected by policy: ${esc(o.error)}` : ''); break;
-    case 'propose_assignment': cls = o.accepted ? 'hold' : 'bad'; txt = o.accepted ? `proposal ${o.proposal_id}: ${o.evidence.hours}h over ${o.evidence.days} days → manager` : `✗ ${esc(o.error)}`; break;
+    case 'propose_assignment': cls = o.accepted ? 'hold' : 'bad'; txt = (o.jev ? jevPill(o.jev.p_assign, 'JEV assign') + ' ' + jevPill(o.jev.sustained, 'sustained') + ' ' : '') + (o.accepted ? `proposal ${o.proposal_id}: ${o.evidence.hours}h over ${o.evidence.days} days → manager` : `✗ ${esc(o.error)}`); break;
     case 'create_invoice': txt = o.accepted ? `✓ ${o.invoice_id} · ${gbp(o.amount_gbp)} · ${o.lines} lines · finalised &amp; sent` : `✗ ${esc(o.error)}`; break;
     default: txt = esc(JSON.stringify(o)).slice(0, 200);
   }

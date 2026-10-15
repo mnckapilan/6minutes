@@ -53,6 +53,8 @@ How to work through week {week}:
 4. Ambiguous work, for example an internal-looking discussion on a client thread: hold_for_review (R6). Don't guess.
 5. Client work on a project the consultant is NOT assigned to: hold_for_review with rule R7 and the project, then,
    if it is sustained, propose_assignment once with concrete evidence (calls, file edits, emails) and the first day.
+   Code re-scores every entry with JEV, an independent calibrated judgment model; if JEV's probability is below the
+   project's threshold the entry is rejected under R6 and you must hold_for_review instead.
 6. Before deciding on unassigned or ambiguous work, call recall_memory (e.g. "Has Sam been approved to work on Acme
    Q3 Audit?", "Is thread thr-x billable?") and cite what it returns in memory_used.
 7. When a consultant's entries are done, move on. After all consultants, call create_invoice once per client project

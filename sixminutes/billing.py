@@ -80,6 +80,7 @@ def create_invoice(ledger: dict, firm: dict, project_key: str, period: str, entr
                     "decision": _md(e.get("decision_ref") or ""),
                     "memory": _md(e.get("memory") or ""),
                     "confidence": _md(e["confidence"]),
+                    "jev": _md(f"p={e['jev']['p']} {e['jev']['model']} {e['jev']['id']}" if e.get("jev") else ""),
                 },
             )
         stripe.Invoice.finalize_invoice(draft.id)

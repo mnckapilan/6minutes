@@ -85,10 +85,12 @@ async def remember(text: str, kind: str = "decision") -> dict:
     return row
 
 
-def _local_recall(question: str) -> list[str]:
+def _local_recall(question: str, decisions_only: bool = False) -> list[str]:
     words = {w for w in re.findall(r"[a-z0-9_.#]+", question.lower()) if len(w) > 2}
     scored = []
     for row in mirror():
+        if decisions_only and (row["kind"] != "decision" or row.get("dataset") != decisions_dataset()):
+            continue
         hits = len(words & set(re.findall(r"[a-z0-9_.#]+", row["text"].lower())))
         if hits:
             scored.append((hits, row["text"]))
@@ -107,11 +109,16 @@ async def recall(question: str) -> dict:
             out["backend"] = "cognee"
         except Exception as e:
             out["error"] = str(e)[:200]
-    if not out["answers"]:
-        # graph not built yet / Cognee unavailable: fall back to the mirror of what was remembered
-        local = _local_recall(question)
-        if local:
-            out["answers"], out["backend"] = local, out["backend"] + "+mirror"
+    # Recent decisions may not be in Cognee's graph yet (remember -> graph build lags by a minute or so), so the
+    # exact decision records we wrote lead; Cognee's graph answers follow. With Cognee down, the mirror alone answers.
+    local = _local_recall(question, decisions_only=bool(out["answers"]))
+    if local:
+        # an explicit decision record refutes "nothing found" answers from a graph that hasn't caught up yet
+        absent = re.compile(r"^(no\b|none\b|unknown|i don.t know)|no indication|does not (contain|mention)|not mentioned",
+                            re.I)
+        graph = [a for a in out["answers"] if a not in local and not absent.search(a.strip())]
+        out["answers"] = local[:2] + graph[:3]
+        out["backend"] += "+decisions"
     store.audit("memory.recall", question=question, answers=out["answers"], backend=out["backend"],
                 error=out.get("error"))
     return out

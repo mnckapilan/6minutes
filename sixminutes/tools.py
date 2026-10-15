@@ -2,7 +2,7 @@
 
 from collections import defaultdict
 
-from . import billing, memory, policy, store
+from . import billing, jev, memory, policy, store
 
 
 class WeekContext:
@@ -76,20 +76,33 @@ async def recall_memory(ctx: WeekContext, question: str) -> dict:
 def propose_time_entry(ctx: WeekContext, consultant: str, project: str, hours: float, activity_ids: list[str],
                        rule_id: str, confidence: float, reason: str, memory_used: str = "") -> dict:
     firm, ledger = store.load_firm(), store.load_ledger()
+    judgment = None
     try:
-        res = policy.evaluate_entry(firm, ledger, ctx.by_id, consultant, project, float(hours), activity_ids,
-                                    float(confidence))
+        # structural rules first (R1/R3/R4/R5/R7), then R6 on JEV's calibrated probability, not the agent's own
+        res = policy.evaluate_entry(firm, ledger, ctx.by_id, consultant, project, float(hours), activity_ids, 1.0)
+        pol = policy.effective_policy(firm, project)
+        judgment = jev.entry_confidence(firm, consultant, project, [
+            {**ctx.by_id[a], "minutes": policy.activity_minutes(ctx.by_id[a], pol)} for a in activity_ids])
+        score = judgment["p"] if judgment else float(confidence)
+        if score < pol["confidence_threshold"]:
+            src = f"JEV p={score:.2f}" if judgment else f"agent confidence {score:.2f} (JEV unavailable)"
+            raise policy.PolicyError("R6", f"{src} is below the {pol['confidence_threshold']} threshold for "
+                                           f"{firm['projects'][project]['name']}: hold_for_review instead")
     except policy.PolicyError as e:
         store.audit("policy.rejected", tool="propose_time_entry", rule=e.rule, error=str(e), consultant=consultant,
-                    project=project, activity_ids=activity_ids, reason=reason)
-        return {"accepted": False, "rule": e.rule, "error": str(e)}
+                    project=project, activity_ids=activity_ids, reason=reason, jev=judgment)
+        out = {"accepted": False, "rule": e.rule, "error": str(e)}
+        if judgment:
+            out["jev"] = judgment
+        return out
 
     out: dict = {"accepted": True, "flags": res["flags"]}
     if res["hours"] > 0:
-        entry = _add_entry(ledger, firm, ctx.week, consultant, project, res, activity_ids, rule_id, confidence,
-                           reason, memory_used)
+        entry = _add_entry(ledger, firm, ctx.week, consultant, project, res, activity_ids, rule_id,
+                           judgment["p"] if judgment else confidence, reason, memory_used)
+        entry["agent_confidence"], entry["jev"] = confidence, judgment
         out.update(entry_id=entry["id"], hours=entry["hours"], amount_gbp=entry["amount"],
-                   line=billing.line_description(firm, entry))
+                   line=billing.line_description(firm, entry), jev=judgment)
     if res["overage_hours"]:
         # one running overage item per project/week for the engagement manager
         hold = next((h for h in ledger["holds"] if h["type"] == "po_cap" and h["status"] == "open"
@@ -163,13 +176,19 @@ def hold_for_review(ctx: WeekContext, activity_ids: list[str], reason: str, proj
         if all(policy.assignment_for(firm, project, consultant, policy.day_of(a)) is None for a in acts):
             kind, rule_id = "unassigned", "R7"
     hold = _add_hold(ledger, kind, consultant, project or None, activity_ids, hours, reason, rule_id)
+    if kind == "review" and project in firm["projects"] and firm["projects"][project].get("client"):
+        hold["jev_internal"] = jev.internal_probability(firm, project, [
+            {**a, "minutes": policy.activity_minutes(a, pol)} for a in acts])
     # attach to an open proposal for the same consultant/project, if one exists
     for p in ledger["proposals"]:
         if p["status"] == "open" and p["consultant"] == consultant and p["project"] == project:
             hold["proposal_id"] = p["id"]
             p["hold_ids"].append(hold["id"])
     store.save_ledger(ledger)
-    return {"accepted": True, "hold_id": hold["id"], "hours": hold["hours"], "type": kind}
+    out = {"accepted": True, "hold_id": hold["id"], "hours": hold["hours"], "type": kind}
+    if hold.get("jev_internal"):
+        out["jev_internal_p"] = hold["jev_internal"]["p"]
+    return out
 
 
 def mark_non_billable(ctx: WeekContext, activity_ids: list[str], rule_id: str, reason: str,
@@ -232,7 +251,16 @@ def propose_assignment(ctx: WeekContext, consultant: str, project: str, role: st
         pol = policy.effective_policy(firm, project)
         return {"accepted": False, "error": f"not sustained: {ev['hours']}h over {ev['days']} day(s); need "
                                             f"{pol['staffing_min_hours']}h across {pol['staffing_min_days']} days"}
-    rate_card = policy.effective_policy(firm, project)["rate_card"]
+    pol = policy.effective_policy(firm, project)
+    judgment = jev.staffing_judgment(firm, consultant, project, ev, [
+        {**ctx.by_id[a], "minutes": policy.activity_minutes(ctx.by_id[a], pol)} for a in ev["activity_ids"]])
+    if judgment and (judgment["choice"] != "assign" or judgment["p_assign"] < pol["confidence_threshold"]):
+        store.audit("policy.rejected", tool="propose_assignment", rule="R6", jev=judgment, consultant=consultant,
+                    project=project)
+        return {"accepted": False, "rule": "R6", "jev": judgment,
+                "error": f"JEV judges this '{judgment['choice']}' (assign p={judgment['p_assign']:.2f}): keep the "
+                         "work held for review instead of proposing an assignment"}
+    rate_card = pol["rate_card"]
     if role not in rate_card:
         return {"accepted": False, "error": f"unknown role {role}; rate card: {list(rate_card)}"}
     proposal = {
@@ -240,7 +268,7 @@ def propose_assignment(ctx: WeekContext, consultant: str, project: str, role: st
         "rate": rate_card[role], "from_date": from_date, "agent_evidence": evidence, "evidence": ev,
         "hold_ids": [h["id"] for h in ledger["holds"] if h["status"] == "open" and h["consultant"] == consultant
                      and h["project"] == project and h["type"] in ("unassigned", "review")],
-        "status": "open", "week": ctx.week, "created": store.now(),
+        "status": "open", "week": ctx.week, "created": store.now(), "jev": judgment,
     }
     for h in ledger["holds"]:
         if h["id"] in proposal["hold_ids"]:
@@ -249,8 +277,8 @@ def propose_assignment(ctx: WeekContext, consultant: str, project: str, role: st
     store.save_ledger(ledger)
     store.audit("staffing.proposal", proposal=proposal["id"], consultant=consultant, project=project, role=role,
                 from_date=from_date, evidence=ev, agent_evidence=evidence)
-    return {"accepted": True, "proposal_id": proposal["id"], "evidence": {k: v for k, v in ev.items()
-                                                                          if k != "activity_ids"}}
+    return {"accepted": True, "proposal_id": proposal["id"], "jev": judgment,
+            "evidence": {k: v for k, v in ev.items() if k != "activity_ids"}}
 
 
 def create_invoice(ctx: WeekContext, project: str, period: str) -> dict:
@@ -289,7 +317,7 @@ SCHEMAS = [
          "consultant": {"type": "string"}, "project": {"type": "string", "description": "project key, e.g. ACME-Q3"},
          "hours": {"type": "number"}, "activity_ids": _ids,
          "rule_id": {"type": "string", "description": "the billing rule applied, usually R2"},
-         "confidence": {"type": "number", "description": "0-1 confidence the activities belong to this project"},
+         "confidence": {"type": "number", "description": "0-1 your own confidence; code re-scores it independently with JEV (R6)"},
          "reason": {"type": "string", "description": "one-line explanation for the invoice line"},
          "memory_used": {"type": "string", "description": "memory recalled that supports this entry, if any"}},
          "required": ["consultant", "project", "hours", "activity_ids", "rule_id", "confidence", "reason"]}},
